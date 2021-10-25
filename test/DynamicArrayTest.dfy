@@ -1,32 +1,27 @@
 include "../src/DynamicArray.dfy"
-include "DynamicArrayMock.dfy"
 include "../src/NativeTypes.dfy"
 
 module DynamicArrayTest {
     
     import opened DynamicArray
-    import opened Extern
     import opened NativeTypes
-    import opened DynamicArrayMock
 
         method get_size_should_returnCurrentSize() 
         {
-            var arr := mock_dynamicArray();
+            var arr := new Vector(4);
             assume arr.current_size == 0;
-            when_push_back(arr, 4);
 
             var result := arr.get_size();
 
-            assert result == 1;
+            assert result == 0;
         }
 
         method at_index_should_returnValueAtGivenIndex() 
         {
-            var arr := mock_dynamicArray();
-            var oracleValue := 4;
-            when_push_back(arr, oracleValue);
+            var arr := new Vector(4);
             var index := 2;
             assume index < arr.current_size;
+            assume index as int < arr.buffer.Length;
 
             var result := arr.at_index(index);
 
@@ -35,7 +30,7 @@ module DynamicArrayTest {
 
         method extend_buffer_should_throwFatal_when_CapacityIsExtendedToMax()
         {
-            var arr := mock_dynamicArray();
+            var arr := new Vector(4);
             assume arr.current_capacity == UINT32_MAX;
 
             arr.extend_buffer(4);
@@ -43,7 +38,7 @@ module DynamicArrayTest {
 
         method extend_buffer_should_extendBufferThenStop_when_CapacityStaysUnderMax()
         {
-            var arr := mock_dynamicArray();
+            var arr := new Vector(2);
             var currentSizeBeforeCall := arr.current_size;
 
             arr.extend_buffer(4);
@@ -56,7 +51,7 @@ module DynamicArrayTest {
 
         method push_back_should_notExtendBuffer_when_sizeIsNotOneLessThanCapacity()
         {
-            var arr := mock_dynamicArray();
+            var arr := new Vector(1);
             assume arr.current_capacity == 32;
             assume arr.current_size == 16;
             var currentSizeBeforeCall := arr.current_size;
@@ -73,7 +68,7 @@ module DynamicArrayTest {
 
         method push_back_should_extendBuffer_when_sizeIsOneLessThanCapacity()
         {
-            var arr := mock_dynamicArray();
+            var arr := new Vector(4);
             assume arr.current_capacity == 32;
             assume arr.current_size == arr.current_capacity - 1;
             var currentSizeBeforeCall := arr.current_size;
@@ -88,8 +83,7 @@ module DynamicArrayTest {
 
         method clear_should_ModifyCurrentSizeToZero() 
         {
-            var arr := mock_dynamicArray();
-            when_push_back(arr, 'c');
+            var arr := new Vector(1);
 
             arr.clear();
 
