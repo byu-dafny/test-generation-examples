@@ -14,5 +14,8 @@ module Utils {
 
     static method {:axiom} mock_Token_OpenVersion0_NotIsValid() returns (token : Token) 
     ensures fresh(token)
+    //ensures forall fingerprint : int :: token.isValid(fingerprint) == true;
+    ensures forall fingerprint : int :: token.isMatch(fingerprint) == true;
+    ensures token.getClearanceLevel() == Confidential
   }
 }
