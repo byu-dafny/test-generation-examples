@@ -13,6 +13,14 @@ mv ./Tokeneer-java/Tokeneer_Compile src/main/java/.
 rm -rf src/test/java/TokeneerTests_Compile
 mv ./Tokeneer-java/TokeneerTests_Compile src/test/java/.
 
+##############################################################################
+# Do not move these files as they are "external"                             #
+# and will clobber the test support code.                                    # 
+#                                                                            #
+# rm -rf src/test/java/Utils_Compile                                         #
+# mv ./Tokeneer-java/Utils_Compile src/test/java/.                           #
+##############################################################################
+
 # TODO: figure out when (if) these are needed
 # rm -rf src/main/java/_System
 # mv ./Tokeneer-java/_System src/main/java/.

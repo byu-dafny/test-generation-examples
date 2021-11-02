@@ -42,6 +42,17 @@
       <artifactId>junit-platform-console-standalone</artifactId>
       <version>1.7.2</version>
     </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>4.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-junit-jupiter</artifactId>
+      <version>4.0.0</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
