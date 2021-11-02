@@ -3,11 +3,12 @@
 package Utils_Compile;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import Tokeneer_Compile.IdStation;
 import Tokeneer_Compile.Token;
+import Tokeneer_Compile.ClearanceLevel_Confidential;
 import Tokeneer_Compile.ClearanceLevel_TopSecret;
 
 public class IdStationUtils {
@@ -17,11 +18,29 @@ public class IdStationUtils {
 
   public static Token mock__Token__OpenVersion0__NotIsValid() {
     Token token = mock(Token.class);
-    when(token.isValid(any())).thenReturn(true);
-    when(token.isMatch(any())).thenReturn(true);
-
+    
     ClearanceLevel_TopSecret topSecret = new ClearanceLevel_TopSecret();
-    when(token.getClearanceLevel()).thenReturn(topSecret);
+    doReturn(topSecret).when(token).getClearanceLevel();
+    return token;
+  }
+
+  public static Token mock__Token__OpenVersion0__IsValid__NotHasClearance() {
+    Token token = mock(Token.class);
+    doReturn(true).when(token).isValid(any());
+    doReturn(true).when(token).isMatch(any());
+    
+    ClearanceLevel_Confidential confidential = new ClearanceLevel_Confidential();
+    doReturn(confidential).when(token).getClearanceLevel();
+    return token;
+  }
+
+  public static Token mock__Token__OpenVersion0__IsValid__HasClearance() {
+    Token token = mock(Token.class);
+    doReturn(true).when(token).isValid(any());
+    doReturn(true).when(token).isMatch(any());
+  
+    ClearanceLevel_TopSecret topSecret = new ClearanceLevel_TopSecret();
+    doReturn(topSecret).when(token).getClearanceLevel();
     return token;
   }
 }

@@ -25,24 +25,24 @@ public class IdStation {
   public boolean openVersion0(Token t, java.math.BigInteger fingerprint)
   {
     boolean access = false;
-    boolean _59_isValid;
+    boolean _103_isValid;
     boolean _out0;
     _out0 = (t).isValid(fingerprint);
-    _59_isValid = _out0;
-    boolean _60_hasSecurityClearance;
-    _60_hasSecurityClearance = (this).hasSecurityClearance(t);
-    (this).access = (_59_isValid) && (_60_hasSecurityClearance);
+    _103_isValid = _out0;
+    boolean _104_hasSecurityClearance;
+    _104_hasSecurityClearance = (this).hasSecurityClearance(t);
+    (this).access = (_103_isValid) && (_104_hasSecurityClearance);
     access = this.access;
     return access;
   }
   public boolean openVersion1(Token t, java.math.BigInteger fingerprint)
   {
     boolean access = false;
-    boolean _61_isValid;
+    boolean _105_isValid;
     boolean _out1;
     _out1 = (t).isValid(fingerprint);
-    _61_isValid = _out1;
-    if (_61_isValid) {
+    _105_isValid = _out1;
+    if (_105_isValid) {
       if ((this).hasSecurityClearance(t)) {
         boolean _out2;
         _out2 = (t).isValid(fingerprint);
