@@ -76,7 +76,7 @@ module Tokeneer {
     }
 
     method openVersion0(t : Token, fingerprint : int) returns (access :  bool)
-    modifies t, `access;
+    modifies t`valid, `access;
     requires this.access == false
     ensures this.access == (old(t.isMatch(fingerprint)) && hasSecurityClearance(t)) 
     ensures access == this.access
@@ -88,7 +88,7 @@ module Tokeneer {
     }
 
     method openVersion1(t : Token, fingerprint : int) returns (access :  bool)
-    modifies t, `access;
+    modifies t`valid, `access;
     requires this.access == false
     ensures this.access == (old(t.isMatch(fingerprint)) && hasSecurityClearance(t)) 
     ensures access == this.access
