@@ -1,6 +1,10 @@
-include "../src/DynamicArray.dfy"
+// This file is only meant to be illustrative.
+// The DynamicArray class should not have a mock when it is the 
+// object under test.
 
-module {:extern "DynamicArrayMock"} DynamicArrayMock {
+include "DynamicArray.dfy"
+
+module {:axiom "DynamicArrayMock"} DynamicArrayMock {
 
     import opened DynamicArray
 

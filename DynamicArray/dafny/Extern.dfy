@@ -10,7 +10,7 @@ include "NativeTypes.dfy"
 module {:extern "Extern"} Extern {
   import opened NativeTypes
 
-method {:extern "Extern", "newArrayFill"} newArrayFill<T>(n: uint64, t: T) returns (ar: array<T>)
+method {:extern "Extern", "newArrayFill"} newArrayFill<T>(n: uint32, t: T) returns (ar: array<T>)
   ensures ar.Length == n as int
   ensures forall i | 0 <= i < n :: ar[i] == t
   ensures fresh(ar)
