@@ -19,7 +19,7 @@ public class Token {
     (this).clearanceLevel = clearanceLevel;
     (this).valid = true;
   }
-  public boolean isMatch(java.math.BigInteger fingerprint) {
+  public boolean f__isValid(java.math.BigInteger fingerprint) {
     return (this.valid) && (java.util.Objects.equals(fingerprint, this.fingerprint));
   }
   public ClearanceLevel getClearanceLevel() {
@@ -28,7 +28,7 @@ public class Token {
   public boolean isValid(java.math.BigInteger fingerprint)
   {
     boolean valid = false;
-    (this).valid = (this.valid) && ((this).isMatch(fingerprint));
+    (this).valid = (this).f__isValid(fingerprint);
     valid = this.valid;
     return valid;
   }

@@ -20,16 +20,16 @@ module Utils {
 
     static method {:axiom} mock_Token_OpenVersion0_NotIsValid() returns (token : Token) 
     ensures fresh(token)
-    ensures forall fingerprint : int :: token.isMatch(fingerprint) == false;
+    ensures forall fingerprint : int :: token.f_isValid(fingerprint) == false;
 
     static method {:axiom} mock_Token_OpenVersion0_IsValid_NotHasClearance() returns (token : Token) 
     ensures fresh(token)
-    ensures forall fingerprint : int :: token.isMatch(fingerprint) == true;
+    ensures forall fingerprint : int :: token.f_isValid(fingerprint) == true;
     ensures token.getClearanceLevel() == Confidential
 
     static method {:axiom} mock_Token_OpenVersion0_IsValid_HasClearance() returns (token : Token) 
     ensures fresh(token)
-    ensures forall fingerprint : int :: token.isMatch(fingerprint) == true;
+    ensures forall fingerprint : int :: token.f_isValid(fingerprint) == true;
     ensures token.getClearanceLevel() == TopSecret
   }
 }

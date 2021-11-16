@@ -27,7 +27,7 @@ public class IdStationUtils {
   public static Token mock__Token__OpenVersion0__IsValid__NotHasClearance() {
     Token token = mock(Token.class);
     doReturn(true).when(token).isValid(any());
-    doReturn(true).when(token).isMatch(any());
+    doReturn(true).when(token).f__isValid(any());
     
     ClearanceLevel_Confidential confidential = new ClearanceLevel_Confidential();
     doReturn(confidential).when(token).getClearanceLevel();
@@ -36,8 +36,8 @@ public class IdStationUtils {
 
   public static Token mock__Token__OpenVersion0__IsValid__HasClearance() {
     Token token = mock(Token.class);
-    doReturn(true).when(token).isValid(any());
-    doReturn(true).when(token).isMatch(any());
+    doReturn(false).when(token).isValid(any());
+    doReturn(true).when(token).f__isValid(any());
   
     ClearanceLevel_TopSecret topSecret = new ClearanceLevel_TopSecret();
     doReturn(topSecret).when(token).getClearanceLevel();
