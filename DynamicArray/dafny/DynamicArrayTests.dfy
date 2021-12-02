@@ -73,8 +73,8 @@ module DynamicArrayTests {
             var oracleValue := 7;
             for i : int := 0 to arr.current_capacity as int - 1
             invariant arr.Valid()
+            invariant fresh(arr.buffer)
             {
-                //TODO: fix this prefix
                 arr.push_back(oracleValue);
             }
             var currentSizeBeforeCall := arr.current_size;

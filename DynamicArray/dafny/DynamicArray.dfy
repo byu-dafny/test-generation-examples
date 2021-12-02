@@ -34,6 +34,7 @@ module DynamicArray {
         predicate Valid()
             reads this, buffer
         {
+            && current_capacity >= DEFAULT_SIZE
             && current_capacity as int == buffer.Length
             && current_size < current_capacity
         }
@@ -53,14 +54,15 @@ module DynamicArray {
             return buffer[index];
         }
 
-        method extend_buffer(value:T)
+        method extend_buffer(value: T)
             requires Valid()
-            modifies this, this`current_capacity, this.buffer
             ensures Valid()
             ensures fresh(buffer)
             ensures current_size as int < current_capacity as int - 1
+            ensures forall i : int :: 0 <= i < old(current_size) as int ==> buffer[i] == old(buffer[i])
             ensures current_size == old(current_size)
-            ensures current_capacity as int == old(current_capacity) as int * 2
+            ensures buffer.Length == old(buffer.Length) * 2
+            modifies this`current_capacity, this`buffer
         {
             if current_capacity >= UINT32_MAX / 2 {
               fatal("at max capacity");
@@ -69,22 +71,21 @@ module DynamicArray {
             var old_buffer := this.buffer;
             var old_size := this.current_capacity;
 
+
             current_capacity := old_size * 2;
-            buffer := newArrayFill(current_capacity as uint32, value);
+            buffer := newArrayFill(current_capacity, value);
 
-            assert current_size < current_capacity - 1;
-
-            var i := 0;
+            var i:= 0;
             while i < old_size
-                invariant Valid()
-                invariant current_capacity > old_size
-                invariant i < current_capacity
-                invariant i < old_size
-                invariant fresh(buffer)
-                invariant current_size < current_capacity - 1
-                invariant current_size == old(current_size)
-                invariant current_capacity == old(current_capacity) * 2
-                decreases old_size as int - i as int
+            invariant Valid();
+            invariant current_capacity > old_size;
+            invariant i < current_capacity;
+            invariant i < old_size;
+            invariant fresh(buffer)
+            invariant current_size < current_capacity - 1;
+            invariant current_size == old(current_size)
+            invariant current_capacity == old(current_capacity) * 2
+            invariant forall k : int :: 0 <= k < i as int ==> buffer[k] == old_buffer[k] == old(buffer[k])
             {
                 buffer[i] := old_buffer[i];
 
@@ -97,13 +98,18 @@ module DynamicArray {
 
         method push_back(value:T)
             requires Valid()
-            modifies this, this.buffer, this`current_size
             ensures Valid();
             ensures old(current_size as int) < buffer.Length
             ensures buffer[old(current_size)] == value
             ensures current_size == old(current_size) + 1
+            ensures if old(current_size) + 1 == old(current_capacity) then fresh(buffer) else buffer == old(buffer)
+            ensures forall i : int :: 0 <= i < old(current_size) as int ==> buffer[i] == old(buffer[i])
+            ensures forall i : int :: current_size as int <= i < old(buffer.Length) ==> buffer[i] == old(buffer[i])
+            ensures if old(current_size) + 1 == old(current_capacity) then fresh(buffer) else !fresh(buffer) && buffer == old(buffer)
+            modifies this, this.buffer, this`current_size
         {
-            if current_size + 1 == current_capacity {
+            if (current_size + 1 == current_capacity)
+            {
                 extend_buffer(value);
             }
             buffer[current_size] := value;
@@ -129,7 +135,7 @@ module DynamicArray {
             current_size := 0;
             current_capacity := DEFAULT_SIZE;
             new;
-            buffer := newArrayFill(16, default_val);
+            buffer := newArrayFill(DEFAULT_SIZE, default_val);
         }
     }
 }
