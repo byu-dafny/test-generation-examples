@@ -16,7 +16,7 @@ module Tokeneer {
       valid := true;
     }
 
-    function method isMatch(fingerprint : int) : bool
+    function method f_isValid(fingerprint : int) : bool
     reads `valid, `fingerprint 
     { 
       (valid && (fingerprint == this.fingerprint))
@@ -30,10 +30,10 @@ module Tokeneer {
 
     method isValid(fingerprint : int) returns (valid : bool) 
     modifies `valid
-    ensures this.valid == old(isMatch(fingerprint))
+    ensures this.valid == old(f_isValid(fingerprint))
     ensures valid == this.valid 
     {
-      this.valid := this.valid && isMatch(fingerprint);
+      this.valid := f_isValid(fingerprint);
       return this.valid;
     }
   }
@@ -78,7 +78,7 @@ module Tokeneer {
     method openVersion0(t : Token, fingerprint : int) returns (access :  bool)
     modifies t`valid, `access;
     requires this.access == false
-    ensures this.access == (old(t.isMatch(fingerprint)) && hasSecurityClearance(t)) 
+    ensures this.access == (old(t.f_isValid(fingerprint)) && hasSecurityClearance(t)) 
     ensures access == this.access
     {
       var isValid := t.isValid(fingerprint);
@@ -90,7 +90,7 @@ module Tokeneer {
     method openVersion1(t : Token, fingerprint : int) returns (access :  bool)
     modifies t`valid, `access;
     requires this.access == false
-    ensures this.access == (old(t.isMatch(fingerprint)) && hasSecurityClearance(t)) 
+    ensures this.access == (old(t.f_isValid(fingerprint)) && hasSecurityClearance(t)) 
     ensures access == this.access
     {
       var isValid := t.isValid(fingerprint);

@@ -20,7 +20,7 @@ module TokeneerTests {
       var fingerprint : int;
     
       // Capture old state
-      var old_t_isMatch := token.isMatch(fingerprint);
+      var old_t_isMatch := token.f_isValid(fingerprint);
 
       // Invoke method under test
       var isOpen := idStation.openVersion0(token, fingerprint);
@@ -36,6 +36,7 @@ module TokeneerTests {
 
       assert(!isOpen);
       JUnit5.assertFalse(isOpen);
+      print "isOpen == ", isOpen;
     }
 
     method test_OpenVersion0_IsValid_NotHasClearance() {
@@ -50,7 +51,7 @@ module TokeneerTests {
       var fingerprint : int;
     
       // Capture old state
-      var old_t_isMatch := token.isMatch(fingerprint);
+      var old_t_isMatch := token.f_isValid(fingerprint);
 
       // Invoke method under test
       var isOpen := idStation.openVersion0(token, fingerprint);
@@ -66,6 +67,7 @@ module TokeneerTests {
 
       assert(!isOpen);
       JUnit5.assertFalse(isOpen);
+      print "isOpen == ", isOpen; 
     }
 
     method test_OpenVersion0_IsValid_HasClearance() {
@@ -80,7 +82,7 @@ module TokeneerTests {
       var fingerprint : int;
     
       // Capture old state
-      var old_t_isMatch := token.isMatch(fingerprint);
+      var old_t_isMatch := token.f_isValid(fingerprint);
 
       // Invoke method under test
       var isOpen := idStation.openVersion0(token, fingerprint);
@@ -96,6 +98,7 @@ module TokeneerTests {
 
       assert(isOpen);
       JUnit5.assertTrue(isOpen);
+      print "isOpen == ", isOpen;
     }
   }
 }
