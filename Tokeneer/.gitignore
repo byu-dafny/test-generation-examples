@@ -6,3 +6,5 @@ target
 .vscode
 .factorypath
 .DS_Store
+*.bpl
+*.dll
