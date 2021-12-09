@@ -3,6 +3,7 @@
 package DynamicArray_Compile;
 
 import NativeTypes_Compile.*;
+import Extern.Extern;
 
 @SuppressWarnings({"unchecked", "deprecation"})
 public class Vector<T> {

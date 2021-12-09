@@ -3,6 +3,7 @@
 package DynamicArrayTests_Compile;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
 
 import NativeTypes_Compile.*;
 import DynamicArray_Compile.*;
@@ -12,11 +13,13 @@ import Utils_Compile.*;
 public class VectorTests {
   public VectorTests() {
   }
-  public void get__size__should__returnCurrentSize()
+  
+  @Test
+  public void test_get__size__should__returnCurrentSize()
   {
     DynamicArray_Compile.Vector<java.math.BigInteger> _157_arr;
     DynamicArray_Compile.Vector<java.math.BigInteger> _out2;
-    _out2 = Utils_Compile.DynamicArrayUtils.<java.math.BigInteger>fresh__DynamicArray(dafny.TypeDescriptor.BIG_INTEGER);
+    _out2 = Utils_Compile.DynamicArrayUtils.<java.math.BigInteger>fresh__DynamicArray(dafny.TypeDescriptor.BIG_INTEGER, java.math.BigInteger.ZERO);
     _157_arr = _out2;
     int _158_result;
     int _out3;
@@ -24,12 +27,14 @@ public class VectorTests {
     _158_result = _out3;
     Utils_Compile.JUnit5.<java.math.BigInteger>assertEquals(dafny.TypeDescriptor.BIG_INTEGER, java.math.BigInteger.valueOf(Integer.toUnsignedLong(_158_result)), java.math.BigInteger.ZERO);
   }
-  public void at__index__should__returnValueAtGivenIndex()
+  @Test
+  public void test_at__index__should__returnValueAtGivenIndex()
   {
     DynamicArray_Compile.Vector<java.math.BigInteger> _159_arr;
     DynamicArray_Compile.Vector<java.math.BigInteger> _out4;
-    _out4 = Utils_Compile.DynamicArrayUtils.<java.math.BigInteger>fresh__DynamicArray(dafny.TypeDescriptor.BIG_INTEGER);
+    _out4 = Utils_Compile.DynamicArrayUtils.<java.math.BigInteger>fresh__DynamicArray(dafny.TypeDescriptor.BIG_INTEGER, java.math.BigInteger.ZERO);
     _159_arr = _out4;
+    java.math.BigInteger[] b = (java.math.BigInteger[]) _159_arr.buffer;
     java.math.BigInteger _160_oracleValue = java.math.BigInteger.ZERO;
     _160_oracleValue = java.math.BigInteger.valueOf(2L);
     (_159_arr).push__back(_160_oracleValue);
@@ -42,11 +47,12 @@ public class VectorTests {
     Utils_Compile.JUnit5.<java.math.BigInteger>assertEquals(dafny.TypeDescriptor.BIG_INTEGER, _162_result, (((java.math.BigInteger[])(_159_arr.buffer)))[(_161_index)]);
     Utils_Compile.JUnit5.<java.math.BigInteger>assertEquals(dafny.TypeDescriptor.BIG_INTEGER, _162_result, _160_oracleValue);
   }
-  public void extend__buffer__should__extendBufferThenStop__when__CapacityStaysUnderMax()
+  @Test
+  public void test_extend__buffer__should__extendBufferThenStop__when__CapacityStaysUnderMax()
   {
     DynamicArray_Compile.Vector<java.math.BigInteger> _163_arr;
     DynamicArray_Compile.Vector<java.math.BigInteger> _out6;
-    _out6 = Utils_Compile.DynamicArrayUtils.<java.math.BigInteger>fresh__DynamicArray(dafny.TypeDescriptor.BIG_INTEGER);
+    _out6 = Utils_Compile.DynamicArrayUtils.<java.math.BigInteger>fresh__DynamicArray(dafny.TypeDescriptor.BIG_INTEGER, java.math.BigInteger.ZERO);
     _163_arr = _out6;
     int _164_currentSizeBeforeCall;
     _164_currentSizeBeforeCall = _163_arr.current__size;
@@ -54,11 +60,12 @@ public class VectorTests {
     Utils_Compile.JUnit5.assertTrue(Integer.compareUnsigned(_163_arr.current__size, _163_arr.current__capacity) < 0);
     Utils_Compile.JUnit5.<java.math.BigInteger>assertEquals(dafny.TypeDescriptor.BIG_INTEGER, java.math.BigInteger.valueOf(Integer.toUnsignedLong(_163_arr.current__size)), java.math.BigInteger.valueOf(Integer.toUnsignedLong(_164_currentSizeBeforeCall)));
   }
-  public void push__back__should__notExtendBuffer__when__sizeIsNotOneLessThanCapacity()
+  @Test
+  public void test_push__back__should__notExtendBuffer__when__sizeIsNotOneLessThanCapacity()
   {
     DynamicArray_Compile.Vector<java.math.BigInteger> _165_arr;
     DynamicArray_Compile.Vector<java.math.BigInteger> _out7;
-    _out7 = Utils_Compile.DynamicArrayUtils.<java.math.BigInteger>fresh__DynamicArray(dafny.TypeDescriptor.BIG_INTEGER);
+    _out7 = Utils_Compile.DynamicArrayUtils.<java.math.BigInteger>fresh__DynamicArray(dafny.TypeDescriptor.BIG_INTEGER, java.math.BigInteger.ZERO);
     _165_arr = _out7;
     int _166_currentSizeBeforeCall;
     _166_currentSizeBeforeCall = _165_arr.current__size;
@@ -69,11 +76,12 @@ public class VectorTests {
     Utils_Compile.JUnit5.assertTrue(java.util.Objects.equals((((java.math.BigInteger[])(_165_arr.buffer)))[(_166_currentSizeBeforeCall)], _167_oracleValue));
     Utils_Compile.JUnit5.assertTrue((_165_arr.current__size) == ((int)  ((_166_currentSizeBeforeCall) + (1))));
   }
-  public void push__back__should__extendBuffer__when__sizeIsOneLessThanCapacity()
+  @Test
+  public void test_push__back__should__extendBuffer__when__sizeIsOneLessThanCapacity()
   {
     DynamicArray_Compile.Vector<java.math.BigInteger> _168_arr;
     DynamicArray_Compile.Vector<java.math.BigInteger> _out8;
-    _out8 = Utils_Compile.DynamicArrayUtils.<java.math.BigInteger>fresh__DynamicArray(dafny.TypeDescriptor.BIG_INTEGER);
+    _out8 = Utils_Compile.DynamicArrayUtils.<java.math.BigInteger>fresh__DynamicArray(dafny.TypeDescriptor.BIG_INTEGER, java.math.BigInteger.ZERO);
     _168_arr = _out8;
     java.math.BigInteger _169_oracleValue = java.math.BigInteger.ZERO;
     _169_oracleValue = java.math.BigInteger.valueOf(7L);
@@ -88,11 +96,12 @@ public class VectorTests {
     Utils_Compile.JUnit5.assertTrue(java.util.Objects.equals((((java.math.BigInteger[])(_168_arr.buffer)))[(_171_currentSizeBeforeCall)], _169_oracleValue));
     Utils_Compile.JUnit5.assertTrue((_168_arr.current__size) == ((int)  ((_171_currentSizeBeforeCall) + (1))));
   }
-  public void clear__should__modifyCurrentSizeToZero()
+  @Test
+  public void test_clear__should__modifyCurrentSizeToZero()
   {
     DynamicArray_Compile.Vector<java.math.BigInteger> _172_arr;
     DynamicArray_Compile.Vector<java.math.BigInteger> _out9;
-    _out9 = Utils_Compile.DynamicArrayUtils.<java.math.BigInteger>fresh__DynamicArray(dafny.TypeDescriptor.BIG_INTEGER);
+    _out9 = Utils_Compile.DynamicArrayUtils.<java.math.BigInteger>fresh__DynamicArray(dafny.TypeDescriptor.BIG_INTEGER, java.math.BigInteger.ZERO);
     _172_arr = _out9;
     (_172_arr).clear();
     Utils_Compile.JUnit5.<Integer>assertEquals(NativeTypes_Compile.uint32._typeDescriptor(), _172_arr.current__size, 0);

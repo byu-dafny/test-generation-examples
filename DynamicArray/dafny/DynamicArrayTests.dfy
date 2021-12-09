@@ -12,7 +12,7 @@ module DynamicArrayTests {
 
         method get_size_should_returnCurrentSize() 
         {
-            var arr : Vector<int> := DynamicArrayUtils.fresh_DynamicArray();
+            var arr : Vector<int> := DynamicArrayUtils.fresh_DynamicArray(0);
 
             var result := arr.get_size();
 
@@ -22,7 +22,7 @@ module DynamicArrayTests {
 
         method at_index_should_returnValueAtGivenIndex() 
         {
-            var arr : Vector<int> := DynamicArrayUtils.fresh_DynamicArray();
+            var arr : Vector<int> := DynamicArrayUtils.fresh_DynamicArray(0);
             var oracleValue := 2;
             arr.push_back(oracleValue);
             var index := 0;
@@ -37,7 +37,7 @@ module DynamicArrayTests {
 
         method extend_buffer_should_extendBufferThenStop_when_CapacityStaysUnderMax()
         {
-            var arr := DynamicArrayUtils.fresh_DynamicArray();
+            var arr := DynamicArrayUtils.fresh_DynamicArray(0);
             var currentSizeBeforeCall := arr.current_size;
 
             arr.extend_buffer(4);
@@ -52,7 +52,7 @@ module DynamicArrayTests {
 
         method push_back_should_notExtendBuffer_when_sizeIsNotOneLessThanCapacity()
         {
-            var arr := DynamicArrayUtils.fresh_DynamicArray();
+            var arr := DynamicArrayUtils.fresh_DynamicArray(0);
             var currentSizeBeforeCall := arr.current_size;
             var oracleValue := 7;
 
@@ -69,7 +69,7 @@ module DynamicArrayTests {
 
         method push_back_should_extendBuffer_when_sizeIsOneLessThanCapacity()
         {
-            var arr := DynamicArrayUtils.fresh_DynamicArray();
+            var arr := DynamicArrayUtils.fresh_DynamicArray(0);
             var oracleValue := 7;
             for i : int := 0 to arr.current_capacity as int - 1
             invariant arr.Valid()
@@ -92,7 +92,7 @@ module DynamicArrayTests {
 
         method clear_should_modifyCurrentSizeToZero() 
         {
-            var arr : Vector<int> := DynamicArrayUtils.fresh_DynamicArray();
+            var arr : Vector<int> := DynamicArrayUtils.fresh_DynamicArray(0);
 
             arr.clear();
 

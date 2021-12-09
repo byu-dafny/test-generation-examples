@@ -14,6 +14,11 @@ method {:extern "Extern", "newArrayFill"} newArrayFill<T>(n: uint32, t: T) retur
   ensures ar.Length == n as int
   ensures forall i | 0 <= i < n :: ar[i] == t
   ensures fresh(ar)
+// {
+//   var arr : array<T>;
+//   arr := new T[n](i => t);
+//   return arr;
+// }
 
 
   method {:extern "Extern", "fatal"} fatal(m:string)
