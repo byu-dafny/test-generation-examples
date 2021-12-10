@@ -90,11 +90,12 @@
       modifies `state, `policy, `alert
       ensures this.state == nextState(old(this.state), req, rsp)
       ensures this.policy == (this.state != ALERT)
+      ensures hasOutput ==> isBounded(old(this.state))
+      // ensures from the trait
       ensures this.alert == ((isLatched && old(this.alert)) || !policy)
       ensures alert == this.alert
       ensures hasOutput == (rsp && !this.alert)
       ensures hasOutput ==> (output == input)
-      ensures hasOutput ==> isBounded(old(this.state))
     {
       this.state := nextState(this.state, req, rsp);
       this.policy := (this.state != this.ALERT);
@@ -129,6 +130,7 @@
       modifies `pending, `policy, `alert
       ensures this.pending == (old(this.pending) + update(req, rsp))
       ensures this.policy == (0 <= pending && pending <= 1)
+      // ensures from the trait
       ensures this.alert == ((isLatched && old(this.alert)) || !this.policy)
       ensures alert == this.alert
       ensures hasOutput == (rsp && !this.alert)

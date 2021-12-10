@@ -2,6 +2,8 @@
 // Dafny class IdStationTests compiled into Java
 package TokeneerTests_Compile;
 
+import org.junit.jupiter.api.Test;
+
 import Tokeneer_Compile.*;
 import Utils_Compile.*;
 
@@ -9,6 +11,8 @@ import Utils_Compile.*;
 public class IdStationTests {
   public IdStationTests() {
   }
+
+  @Test
   public void test__OpenVersion0__NotIsValid()
   {
     Tokeneer_Compile.IdStation _106_idStation;
@@ -37,6 +41,8 @@ public class IdStationTests {
     System.out.print((dafny.DafnySequence.asString("isOpen == ")).verbatimString());
     System.out.print(String.valueOf(_110_isOpen));
   }
+
+  @Test
   public void test__OpenVersion0__IsValid__NotHasClearance()
   {
     Tokeneer_Compile.IdStation _112_idStation;
@@ -65,6 +71,8 @@ public class IdStationTests {
     System.out.print((dafny.DafnySequence.asString("isOpen == ")).verbatimString());
     System.out.print(String.valueOf(_116_isOpen));
   }
+
+  @Test
   public void test__OpenVersion0__IsValid__HasClearance()
   {
     Tokeneer_Compile.IdStation _118_idStation;
@@ -90,8 +98,6 @@ public class IdStationTests {
     Utils_Compile.JUnit5.assertEquals(_118_idStation.access, (_121_old__t__isMatch) && (_123_hasSecurityClearance));
     Utils_Compile.JUnit5.assertEquals(_122_isOpen, _118_idStation.access);
     Utils_Compile.JUnit5.assertTrue(_122_isOpen);
-    System.out.print((dafny.DafnySequence.asString("isOpen == ")).verbatimString());
-    System.out.print(String.valueOf(_122_isOpen));
   }
   private static final dafny.TypeDescriptor<IdStationTests> _TYPE = dafny.TypeDescriptor.referenceWithInitializer(IdStationTests.class, () -> (IdStationTests) null);
   public static dafny.TypeDescriptor<IdStationTests> _typeDescriptor() {

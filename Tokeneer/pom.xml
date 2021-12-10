@@ -89,6 +89,23 @@
             </goals>
           </execution>
         </executions>
+        <configuration>
+          <rules>
+            <rule>
+              <element>CLASS</element>
+              <includes>
+                <include>Tokeneer_Compile.IdStation</include>
+              </includes>
+              <limits>
+                <limit>
+                  <counter>BRANCH</counter>
+                  <value>COVEREDRATIO</value>
+                  <minimum>50%</minimum>
+                </limit>
+              </limits>
+            </rule>
+          </rules>
+        </configuration>
       </plugin>
     </plugins>
   </build>

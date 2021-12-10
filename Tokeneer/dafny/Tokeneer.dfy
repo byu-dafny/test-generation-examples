@@ -90,7 +90,7 @@ module Tokeneer {
     method openVersion1(t : Token, fingerprint : int) returns (access :  bool)
     modifies t`valid, `access;
     requires this.access == false
-    ensures this.access == (old(t.f_isValid(fingerprint)) && hasSecurityClearance(t)) 
+    ensures (old(t.f_isValid(fingerprint)) && hasSecurityClearance(t)) == this.access
     ensures access == this.access
     {
       var isValid := t.isValid(fingerprint);

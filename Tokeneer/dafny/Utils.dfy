@@ -4,13 +4,13 @@ module Utils {
   import opened Tokeneer
 
   class JUnit5 {
-    static method {:axiom} assertEquals(left : bool, right : bool)
+    static method {:extern} assertEquals(left : bool, right : bool)
     ensures true
 
-    static method {:axiom} assertTrue(value : bool)
+    static method {:extern} assertTrue(value : bool)
     ensures true
 
-    static method {:axiom} assertFalse(value : bool)
+    static method {:extern} assertFalse(value : bool)
     ensures true
   }
 

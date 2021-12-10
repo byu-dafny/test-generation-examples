@@ -1,8 +1,8 @@
 #!/bin/sh
 
-DOTNET="/usr/local/share/dotnet/dotnet"
-DAFNY="/Users/egm/.vscode/extensions/correctnesslab.dafny-vscode-1.8.0/out/resources/dafny/Dafny.dll"
-MODEL="/Users/egm/Documents/byu-dafny/test-generation-examples/Tokeneer/dafny/TokeneerTests.dfy"
+DOTNET=/usr/local/share/dotnet/dotnet
+DAFNY=${HOME}/.vscode/extensions/correctnesslab.dafny-vscode-2.0.2/out/resources/dafny/Dafny.dll
+MODEL=${HOME}/Documents/byu-dafny/test-generation-examples/Tokeneer/dafny/TokeneerTests.dfy
 ARGS="/verifyAllModules /compileTarget:java /compile:1 /spillTargetCode:1 /out:Tokeneer"
 
 ${DOTNET} ${DAFNY} ${MODEL} $ARGS

@@ -36,7 +36,7 @@ public class IdStationUtils {
 
   public static Token mock__Token__OpenVersion0__IsValid__HasClearance() {
     Token token = mock(Token.class);
-    doReturn(false).when(token).isValid(any());
+    doReturn(true).when(token).isValid(any());
     doReturn(true).when(token).f__isValid(any());
   
     ClearanceLevel_TopSecret topSecret = new ClearanceLevel_TopSecret();
