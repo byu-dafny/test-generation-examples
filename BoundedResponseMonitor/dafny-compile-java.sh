@@ -33,6 +33,13 @@ rm -rf ./${MODULENAME}-java
 # Create symbolic links to test support files
 ln -s ../../../java/Utils_Compile src/test/java/
 
+# Add the JUnit5 Import to the file with the @Test annotation
+sed -i ''                                                                     \
+    -E                                                                        \
+    -e '/^package*/a\'$'\n''import org.junit.jupiter.api.Test;'               \
+    -e '/^[[:space:]]+public[[:space:]]+void[[:space:]]+test*/i\'$'\n''@Test' \
+    src/test/java/${MODULENAME}Tests_Compile/BoundedResponseTest.java
+
 ##############################################################################
 # Do not move these files as they are "external"                             #
 # and will clobber the test support code.                                    # 
