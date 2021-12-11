@@ -15,7 +15,7 @@ mkdir src/test
 mkdir src/test/java
 
 # Generate Java from Dafny model and move srcs
-${DOTNET} ${DAFNY} ${MODEL} $ARGS
+${DOTNET} ${DAFNY} ${MODEL} $ARGS &> /dev/null
 
 # Clean build files
 find ./${MODULENAME}-java -name "*.class" | xargs rm -rf

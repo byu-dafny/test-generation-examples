@@ -7,7 +7,35 @@ module BoundedResponseMonitorTests {
   import opened Utils
 
   class BoundedResponseTest {
-    method testBoundedResponse() {
+
+    method {:test} test_constructor_should_throwException_when_lowerBoundLessThanZero() 
+    {
+      BoundedResponseTestSupport.checkRequires_boundedResponse(-1, 0);
+    }
+
+    method {:test} test_constructor_should_throwException_when_upperBoundGreaterThanLowerBound() 
+    {
+      BoundedResponseTestSupport.checkRequires_boundedResponse(1, 0);
+    }
+
+    method {:test} test_constructor_should_doNothing_when_inputValid()
+    {
+      var lowerBound : int := 0;
+      var upperBound : int := 1;
+
+      var testSubject : BoundedResponse<int> :=
+        new BoundedResponse.boundedResponse(lowerBound, upperBound);
+        
+      Assertions<int>.assertEquals(testSubject.ALERT, upperBound + 1);
+      Assertions<int>.assertEquals(testSubject.LOWERBOUND, lowerBound);
+      Assertions<int>.assertEquals(testSubject.UPPERBOUND, upperBound);
+      Assertions<int>.assertEquals(testSubject.state, testSubject.INIT);
+      Assertions<bool>.assertEquals(testSubject.isLatched, false);
+      Assertions<bool>.assertEquals(testSubject.policy, false);
+      Assertions<bool>.assertEquals(testSubject.alert, false);
+    }
+
+    method {:test} testBoundedResponse() {
       var m : BoundedResponseMonitor.BoundedResponse<int> := 
           new BoundedResponseMonitor.BoundedResponse<int>.boundedResponse(0, 2);
 

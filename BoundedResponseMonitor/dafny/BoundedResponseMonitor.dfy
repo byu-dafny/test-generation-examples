@@ -23,7 +23,6 @@
 
     constructor boundedResponse(lowerBound : int, upperBound : int)
       requires lowerBound >= 0
-      requires upperBound >= 0
       requires lowerBound <= upperBound
       ensures this.ALERT == upperBound + 1
       ensures this.LOWERBOUND == lowerBound
@@ -33,6 +32,9 @@
       ensures this.policy == false
       ensures this.alert == false
     {
+      expect(lowerBound >= 0);
+      expect(lowerBound <= upperBound);
+      
       this.ALERT := upperBound + 1;
       this.LOWERBOUND := lowerBound;
       this.UPPERBOUND := upperBound;
