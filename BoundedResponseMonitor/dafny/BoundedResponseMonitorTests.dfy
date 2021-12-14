@@ -8,7 +8,7 @@ module BoundedResponseMonitorTests {
 
   class BoundedResponseTest {
 
-    method {:test} test_constructor_should_throwException_when_lowerBoundLessThanZero() 
+    method {:test "JUnit5"} test_constructor_should_throwException_when_lowerBoundLessThanZero() 
     {
       BoundedResponseTestSupport.checkRequires_boundedResponse(-1, 0);
     }
