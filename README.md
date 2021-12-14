@@ -1,5 +1,25 @@
 # Dafny Unit Test Interface
 
+**Assertion Library**: provides basic assertions.
+
+```java
+class Assertions<T> {
+  static method {:extern} assertEquals(expected : T, actual : T)
+  requires expected == actual
+
+  static method {:extern} assertTrue(condition : bool)
+  requires condition
+
+  static method {:extern} assertFalse(condition : bool)
+  requires !condition
+
+  ...
+
+}
+```
+
+The is a Java implementation existing for `JUnit5`.
+
 **Method Annotation** `{:test <framework>}`: indicates a method is a unit test and should be annotated as such in the generated Java file. The annotation for the test depends on the indicated framework. 
 
 ```java
@@ -16,10 +36,10 @@ static method {:fresh} fresh_IdStation() returns (idStation : IdStation)
     ensures fresh(idStation)
 ```
 
-**Method Annotation** `{:mock}`: indicates a method creates a mock.
+**Method Annotation** `{:mock <framework>}`: indicates a method creates a mock.
 
 ```java
-static method {:axiom} mock_Token_OpenVersion0_NotIsValid() returns (token : Token) 
+static method {:mock "Mockito"} mock_Token_OpenVersion0_NotIsValid() returns (token : Token) 
   ensures fresh(token)
   ensures forall fingerprint : int :: token.f_isValid(fingerprint) == false;
 ```

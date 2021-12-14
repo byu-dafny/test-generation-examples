@@ -4,10 +4,10 @@ module Utils {
     requires expected == actual
 
     static method {:extern} assertTrue(condition : bool)
-    ensures condition
+    requires condition
 
     static method {:extern} assertFalse(condition : bool)
-    ensures !condition
+    requires !condition
   }
 
   class BoundedResponseTestSupport {
