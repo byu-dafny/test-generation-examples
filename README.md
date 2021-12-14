@@ -3,6 +3,27 @@
 **Assertion Library**: provides basic assertions.
 
 ```java
+method {:test "JUnit5"} test_constructor_should_doNothing_when_inputValid()
+{
+  var lowerBound : int := 0;
+  var upperBound : int := 1;
+
+  var testSubject : BoundedResponse<int> :=
+    new BoundedResponse.boundedResponse(lowerBound, upperBound);
+    
+  Assertions<int>.assertEquals(testSubject.ALERT, upperBound + 1);
+  Assertions<int>.assertEquals(testSubject.LOWERBOUND, lowerBound);
+  Assertions<int>.assertEquals(testSubject.UPPERBOUND, upperBound);
+  Assertions<int>.assertEquals(testSubject.state, testSubject.INIT);
+  Assertions<bool>.assertFalse(testSubject.isLatched);
+  Assertions<bool>.assertFalse(testSubject.policy);
+  Assertions<bool>.assertFalse(testSubject.alert);
+}
+```
+
+The Assertions library `requires` the expected condition so Dafny proves out.
+
+```java
 class Assertions<T> {
   static method {:extern} assertEquals(expected : T, actual : T)
   requires expected == actual
