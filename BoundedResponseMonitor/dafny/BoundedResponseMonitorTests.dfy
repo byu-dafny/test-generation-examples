@@ -13,12 +13,12 @@ module BoundedResponseMonitorTests {
       BoundedResponseTestSupport.checkRequires_boundedResponse(-1, 0);
     }
 
-    method {:test} test_constructor_should_throwException_when_upperBoundGreaterThanLowerBound() 
+    method {:test "JUnit5"} test_constructor_should_throwException_when_upperBoundGreaterThanLowerBound() 
     {
       BoundedResponseTestSupport.checkRequires_boundedResponse(1, 0);
     }
 
-    method {:test} test_constructor_should_doNothing_when_inputValid()
+    method {:test "JUnit5"} test_constructor_should_doNothing_when_inputValid()
     {
       var lowerBound : int := 0;
       var upperBound : int := 1;
@@ -35,7 +35,7 @@ module BoundedResponseMonitorTests {
       Assertions<bool>.assertFalse(testSubject.alert);
     }
 
-    method {:test} testBoundedResponse() {
+    method {:test "JUnit5"} testBoundedResponse() {
       var m : BoundedResponseMonitor.BoundedResponse<int> := 
           new BoundedResponseMonitor.BoundedResponse<int>.boundedResponse(0, 2);
 
