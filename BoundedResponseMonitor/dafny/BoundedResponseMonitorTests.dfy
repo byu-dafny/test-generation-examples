@@ -30,9 +30,9 @@ module BoundedResponseMonitorTests {
       Assertions<int>.assertEquals(testSubject.LOWERBOUND, lowerBound);
       Assertions<int>.assertEquals(testSubject.UPPERBOUND, upperBound);
       Assertions<int>.assertEquals(testSubject.state, testSubject.INIT);
-      Assertions<bool>.assertEquals(testSubject.isLatched, false);
-      Assertions<bool>.assertEquals(testSubject.policy, false);
-      Assertions<bool>.assertEquals(testSubject.alert, false);
+      Assertions<bool>.assertFalse(testSubject.isLatched);
+      Assertions<bool>.assertFalse(testSubject.policy);
+      Assertions<bool>.assertFalse(testSubject.alert);
     }
 
     method {:test} testBoundedResponse() {

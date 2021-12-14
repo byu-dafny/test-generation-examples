@@ -28,9 +28,9 @@
       ensures this.LOWERBOUND == lowerBound
       ensures this.UPPERBOUND == upperBound
       ensures this.state == INIT
-      ensures this.isLatched == false
-      ensures this.policy == false
-      ensures this.alert == false
+      ensures !this.isLatched
+      ensures !this.policy
+      ensures !this.alert
     {
       expect(lowerBound >= 0);
       expect(lowerBound <= upperBound);
@@ -66,8 +66,7 @@
 
     function method isValidBounds(curState : int) : bool
     {
-         this.UPPERBOUND >= 0
-      && this.LOWERBOUND >= 0
+         this.LOWERBOUND >= 0
       && this.LOWERBOUND <= this.UPPERBOUND
     }
 
@@ -158,8 +157,8 @@
     constructor onePendingAutomata(isLatched: bool) 
       ensures this.state == NOTHING
       ensures this.isLatched == isLatched
-      ensures this.policy == false
-      ensures this.alert == false
+      ensures !this.policy
+      ensures !this.alert
     {
       this.isLatched := isLatched;
       this.policy :=  false;
