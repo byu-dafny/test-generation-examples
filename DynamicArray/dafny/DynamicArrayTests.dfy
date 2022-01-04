@@ -10,7 +10,7 @@ module DynamicArrayTests {
 
     class VectorTests {
 
-        method get_size_should_returnCurrentSize() 
+        method {:test "JUnit5"} test_get_size_should_returnCurrentSize() 
         {
             var arr : Vector<int> := DynamicArrayUtils.fresh_DynamicArray(0);
 
@@ -20,7 +20,7 @@ module DynamicArrayTests {
             JUnit5.assertEquals(result as int, 0);
         }
 
-        method at_index_should_returnValueAtGivenIndex() 
+        method {:test "JUnit5"} test_at_index_should_returnValueAtGivenIndex() 
         {
             var arr : Vector<int> := DynamicArrayUtils.fresh_DynamicArray(0);
             var oracleValue := 2;
@@ -35,7 +35,7 @@ module DynamicArrayTests {
             JUnit5.assertEquals(result, oracleValue);
         }
 
-        method extend_buffer_should_extendBufferThenStop_when_CapacityStaysUnderMax()
+        method {:test "JUnit5"} test_extend_buffer_should_extendBufferThenStop_when_CapacityStaysUnderMax()
         {
             var arr := DynamicArrayUtils.fresh_DynamicArray(0);
             var currentSizeBeforeCall := arr.current_size;
@@ -50,7 +50,7 @@ module DynamicArrayTests {
         }
 
 
-        method push_back_should_notExtendBuffer_when_sizeIsNotOneLessThanCapacity()
+        method {:test "JUnit5"} test_push_back_should_notExtendBuffer_when_sizeIsNotOneLessThanCapacity()
         {
             var arr := DynamicArrayUtils.fresh_DynamicArray(0);
             var currentSizeBeforeCall := arr.current_size;
@@ -67,7 +67,7 @@ module DynamicArrayTests {
             JUnit5.assertTrue(arr.current_size == currentSizeBeforeCall + 1);
         }
 
-        method push_back_should_extendBuffer_when_sizeIsOneLessThanCapacity()
+        method {:test "JUnit5"} test_push_back_should_extendBuffer_when_sizeIsOneLessThanCapacity()
         {
             var arr := DynamicArrayUtils.fresh_DynamicArray(0);
             var oracleValue := 7;
@@ -90,7 +90,21 @@ module DynamicArrayTests {
             JUnit5.assertTrue(arr.current_size == currentSizeBeforeCall + 1);
         }
 
-        method clear_should_modifyCurrentSizeToZero() 
+        method {:test "JUnit5"} test_push_back_should_throwException_when_capacityAboveMax() 
+        {
+            var arr : Vector<int> := DynamicArrayUtils.fresh_DynamicArray(0);
+            var value := 7;
+            for i : int := 0 to UINT16_MAX_JAVA as int / 2
+            invariant arr.Valid()
+            invariant fresh(arr.buffer)
+            {
+                arr.push_back(value);
+            }
+
+            JUnit5.assertThrowsAfterPushBack(arr);
+        }
+
+        method {:test "JUnit5"} test_clear_should_modifyCurrentSizeToZero() 
         {
             var arr : Vector<int> := DynamicArrayUtils.fresh_DynamicArray(0);
 

@@ -3,18 +3,15 @@
 package Utils_Compile;
 
 import NativeTypes_Compile.*;
+import Extern_Compile.*;
 import DynamicArray_Compile.*;
-import dafny.*;
 
 @SuppressWarnings({"unchecked", "deprecation"})
-public class DynamicArrayUtils {
-  public DynamicArrayUtils() {
+public class DynamicArrayUtils<T> {
+  private dafny.TypeDescriptor<T> _td_T;
+  public DynamicArrayUtils(dafny.TypeDescriptor<T> _td_T) {
+    this._td_T = _td_T;
   }
-  private static final dafny.TypeDescriptor<DynamicArrayUtils> _TYPE = dafny.TypeDescriptor.referenceWithInitializer(DynamicArrayUtils.class, () -> (DynamicArrayUtils) null);
-  public static dafny.TypeDescriptor<DynamicArrayUtils> _typeDescriptor() {
-    return (dafny.TypeDescriptor<DynamicArrayUtils>) (dafny.TypeDescriptor<?>) _TYPE;
-  }
-
   public static <T> DynamicArray_Compile.Vector<T> fresh__DynamicArray(dafny.TypeDescriptor<T> _td_T, T t)
   {
     DynamicArray_Compile.Vector<T> vector = null;
@@ -22,5 +19,8 @@ public class DynamicArrayUtils {
     _nw1.__ctor(t);
     vector = _nw1;
     return vector;
+  }
+  public static <T> dafny.TypeDescriptor<DynamicArrayUtils<T>> _typeDescriptor(dafny.TypeDescriptor<T> _td_T) {
+    return (dafny.TypeDescriptor<DynamicArrayUtils<T>>) (dafny.TypeDescriptor<?>) dafny.TypeDescriptor.referenceWithInitializer(DynamicArrayUtils.class, () -> (DynamicArrayUtils<T>) null);
   }
 }

@@ -63,6 +63,10 @@ public class __default {
   {
     return -9223372036854775807L;
   }
+  public static short UINT16__MAX__JAVA()
+  {
+    return (short) 32767;
+  }
   private static final dafny.TypeDescriptor<__default> _TYPE = dafny.TypeDescriptor.referenceWithInitializer(__default.class, () -> (__default) null);
   public static dafny.TypeDescriptor<__default> _typeDescriptor() {
     return (dafny.TypeDescriptor<__default>) (dafny.TypeDescriptor<?>) _TYPE;

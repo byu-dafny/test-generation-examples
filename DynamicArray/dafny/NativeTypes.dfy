@@ -25,6 +25,7 @@ module NativeTypes {
     const UINT16_MAX :uint16 := 0xffff;
     const INT64_MAX : int64 := 0x7fffffffffffffff;
     const INT64_MIN : int64 := -0x7fffffffffffffff;
+    const UINT16_MAX_JAVA :uint16 := 0x7fff;
 
     type uint2 = i:uint64 | 0 <= i < 4
     type uint62 = i: uint64 | 0 <= i <= UINT62_MAX

@@ -1,34 +1,52 @@
 #!/bin/sh
 
+MODULENAME=DynamicArray
 DOTNET="/usr/bin/dotnet"
-DAFNY="/home/deant4/.vscode-server/extensions/correctnesslab.dafny-vscode-2.0.2/out/resources/dafny/Dafny.dll"
-MODEL="./dafny/DynamicArrayTests.dfy"
-ARGS="/verifyAllModules /compileTarget:java /compile:1 /spillTargetCode:1 /out:DynamicArray"
+DAFNY="${HOME}/.vscode-server/extensions/correctnesslab.dafny-vscode-2.0.3/out/resources/dafny/Dafny.dll"
+MODEL="./dafny/${MODULENAME}Tests.dfy"
+ARGS="/verifyAllModules /compileTarget:java /compile:1 /spillTargetCode:1 /out:${MODULENAME}"
 
+# Create Maven directory structure
+rm -rf src
+mkdir src
+mkdir src/main
+mkdir src/main/java
+mkdir src/test
+mkdir src/test/java
+
+# Generate Java from Dafny model and move srcs
 ${DOTNET} ${DAFNY} ${MODEL} $ARGS
 
-rm -rf src/main/java/DynamicArray_Compile
-mv ./DynamicArray-java/DynamicArray_Compile src/main/java/.
+# Clean build files
+find ./${MODULENAME}-java -name "*.class" | xargs rm -rf
 
-rm -rf src/test/java/DynamicArrayTests_Compile
-mv ./DynamicArray-java/DynamicArrayTests_Compile src/test/java/.
+# Move generated source files into Maven structure
+mv ./${MODULENAME}-java/${MODULENAME}_Compile src/main/java/.
+mv ./${MODULENAME}-java/${MODULENAME}Tests_Compile src/test/java/.
+mv ./${MODULENAME}-java/dafny src/main/java/.
 
 ##############################################################################
 # Do not move these files as they are "external"                             #
 # and will clobber the test support code.                                    # 
 #                                                                            #
-rm -rf src/test/java/Utils_Compile                                         #
-mv ./DynamicArray-java/Utils_Compile src/test/java/.                           #
-rm -rf src/main/java/NativeTypes_Compile                                         #
-mv ./DynamicArray-java/NativeTypes_Compile src/main/java/.   
+mv ./${MODULENAME}-java/Utils_Compile src/test/java/.
+mv ./${MODULENAME}-java/NativeTypes_Compile src/main/java/.
+mv ./${MODULENAME}-java/Extern_Compile src/main/java/.
 ##############################################################################
 
-# TODO: figure out when (if) these are needed
-# rm -rf src/main/java/_System
-# mv ./DynamicArray-java/_System src/main/java/.
-#
-# rm -rf src/main/java/dafny
-# mv ./DynamicArray-java/dafny src/main/java/.
 
-find src/ -name "*.class" | xargs rm -rf
-rm -rf ./DynamicArray-java
+# TODO: figure out when (if) these are needed
+# mv ./${MODULENAME}-java/_System src/main/java/.
+
+# Clean the output directory
+rm -rf ./${MODULENAME}-java
+
+# Create symbolic links to test support files
+#ln -s ../../../java/Utils_Compile src/test/java/
+
+#Add the JUnit5 Import to the file with the @Test annotation
+sed -i                                                                      \
+    -E                                                                        \
+    -e '/^package*/a\'$'\n''import org.junit.jupiter.api.Test;'               \
+    -e '/^[[:space:]]+public[[:space:]]+void[[:space:]]+test*/i\'$'\n''@Test' \
+    src/test/java/${MODULENAME}Tests_Compile/VectorTests.java

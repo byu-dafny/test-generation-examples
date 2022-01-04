@@ -26,10 +26,10 @@ module DynamicArray {
 
     class Vector<T>
     {
-        static const DEFAULT_SIZE :uint32 := 16
+        static const DEFAULT_SIZE :uint16 := 16
         var buffer :array<T>
-        var current_capacity :uint32
-        var current_size :uint32
+        var current_capacity :uint16
+        var current_size :uint16
 
         predicate Valid()
             reads this, buffer
@@ -39,14 +39,14 @@ module DynamicArray {
             && current_size < current_capacity
         }
 
-        method get_size() returns (x:uint32)
+        method get_size() returns (x:uint16)
             ensures x == current_size
             ensures current_size == old(current_size)
         {
             return current_size;
         }
 
-        method at_index(index:uint32) returns (x:T)
+        method at_index(index:uint16) returns (x:T)
             requires Valid()
             requires index < current_size
             ensures x == buffer[index]
@@ -64,7 +64,7 @@ module DynamicArray {
             ensures buffer.Length == old(buffer.Length) * 2
             modifies this`current_capacity, this`buffer
         {
-            if current_capacity >= UINT32_MAX / 2 {
+            if current_capacity >= UINT16_MAX_JAVA / 2 {
               fatal("at max capacity");
               return;
             }
