@@ -33,8 +33,9 @@ public class Vector<T> {
   public void extend__buffer(T value)
   {
     if (Integer.compareUnsigned(this.current__capacity, dafny.Helpers.divideUnsignedShort(NativeTypes_Compile.__default.UINT16__MAX__JAVA(), (short) 2)) >= 0) {
+      // Jacoco will report that following statement is not executed.  
+      // This is because exception is thrown in fatal.  See https://github.com/jacoco/eclemma/issues/61
       Extern_Compile.__default.fatal(dafny.DafnySequence.asString("at max capacity"));
-      return;
     }
     java.lang.Object _174_old__buffer;
     _174_old__buffer = this.buffer;
@@ -46,15 +47,10 @@ public class Vector<T> {
     (this).buffer = _out0;
     short _176_i;
     _176_i = (short) 0;
-    goto_0: {
-      while (Integer.compareUnsigned(_176_i, _175_old__size) < 0) {
-        java.lang.Object _arr0 = this.buffer;
-        _td_T.setArrayElement(_arr0, dafny.Helpers.unsignedToInt((_176_i)),_td_T.getArrayElement((_174_old__buffer), (dafny.Helpers.unsignedToInt(_176_i))));
-        if ((_176_i) == ((short)((short) (short)  ((_175_old__size) - ((short) 1))))) {
-          break goto_0;
-        }
-        _176_i = (short)((short) (short)  ((_176_i) + ((short) 1)));
-      }
+    while (Integer.compareUnsigned(_176_i, _175_old__size) < 0) {
+      java.lang.Object _arr0 = this.buffer;
+      _td_T.setArrayElement(_arr0, dafny.Helpers.unsignedToInt((_176_i)),_td_T.getArrayElement((_174_old__buffer), (dafny.Helpers.unsignedToInt(_176_i))));
+      _176_i = (short)((short) (short)  ((_176_i) + ((short) 1)));
     }
   }
   public void push__back(T value)

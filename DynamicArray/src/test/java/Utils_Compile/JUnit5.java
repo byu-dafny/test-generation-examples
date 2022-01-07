@@ -16,6 +16,7 @@ public class JUnit5 {
   public static dafny.TypeDescriptor<JUnit5> _typeDescriptor() {
     return (dafny.TypeDescriptor<JUnit5>) (dafny.TypeDescriptor<?>) _TYPE;
   }
+  
   static public <T> void assertEquals(dafny.TypeDescriptor<T> typeDescriptor, T left, T right) {
     Assertions.assertEquals(left, right);
   }

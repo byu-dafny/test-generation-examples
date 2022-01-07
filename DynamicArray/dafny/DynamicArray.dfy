@@ -66,7 +66,6 @@ module DynamicArray {
         {
             if current_capacity >= UINT16_MAX_JAVA / 2 {
               fatal("at max capacity");
-              return;
             }
             var old_buffer := this.buffer;
             var old_size := this.current_capacity;
@@ -80,7 +79,7 @@ module DynamicArray {
             invariant Valid();
             invariant current_capacity > old_size;
             invariant i < current_capacity;
-            invariant i < old_size;
+            invariant i <= old_size;
             invariant fresh(buffer)
             invariant current_size < current_capacity - 1;
             invariant current_size == old(current_size)
@@ -89,9 +88,6 @@ module DynamicArray {
             {
                 buffer[i] := old_buffer[i];
 
-                if i == old_size - 1 {
-                    break;
-                }
                 i := i + 1;
             }
         }
