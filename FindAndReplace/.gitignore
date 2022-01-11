@@ -1,0 +1,9 @@
+target
+.classpath
+.devcontainer
+.project
+.settings
+.vscode
+.factorypath
+.DS_Store
+dafny/FindAndReplaceDump.dfy

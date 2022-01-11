@@ -1,34 +1,31 @@
 include "FindAndReplace.dfy"
-
+include "Utils.dfy"
 
 module FindAndReplaceTests {
 
     import opened FindAndReplace
+    import opened Utils
 
-    method findAndReplace_should_replaceWordInMiddleOfStr()
-    {
-        var str := "tis";
-        var toFind := "is";
-        var toReplace := "was";
+    class FindAndReplaceTests {
 
-        assert "ti" != toFind;
-        assert !(toFind <= str);
-        var result := findAndReplace(str, toFind, toReplace);
+        method {:test "JUnit5"} test_findAndReplace_should_replaceWordInMiddleOfStr()
+        {
+            var str := "tis";
+            var toFind := "is";
+            var toReplace := "was";
 
-        assert result == "twas";
-    }
+            var witnessValue := "ah";
 
-    method findAndReplace2_should_replaceWordInMiddleOfStr()
-    {
-        var str := "tis";
-        var toFind := "is";
-        var toReplace := "was";
+            assert witnessValue != toFind;
+            JUnit5.assertNotEquals(witnessValue, toFind);
 
-        assert "ti" != toFind;
-        assert !(toFind <= str);
-        var result := findAndReplace2(str, toFind, toReplace);
+            var result := findAndReplace(str, toFind, toReplace);
 
-        assert result == "twas";
+            var oracleValue := "twas";
+
+            assert result == oracleValue;
+            JUnit5.assertEquals(result, oracleValue);
+        }
     }
 }
 
