@@ -5,13 +5,13 @@ module Utils {
 
     class JUnit5 {
         static method {:axiom} assertEquals<T>(left : T, right : T)
-        ensures true
+        requires left == right
 
         static method {:axiom} assertTrue(value : bool)
-        ensures true
+        requires value
 
         static method {:axiom} assertFalse(value : bool)
-        ensures true
+        requires !value
 
         static method {:axiom} assertThrowsAfterPushBack(v : Vector)
         ensures true
