@@ -2,7 +2,7 @@
 
 MODULENAME=BoundedResponseMonitor
 DOTNET=/usr/local/share/dotnet/dotnet
-DAFNY=${HOME}/.vscode/extensions/correctnesslab.dafny-vscode-2.0.2/out/resources/dafny/Dafny.dll
+DAFNY=${HOME}/.vscode/extensions/dafny-lang.ide-vscode-2.1.1/out/resources/dafny/Dafny.dll
 MODEL=${HOME}/Documents/byu-dafny/test-generation-examples/${MODULENAME}/dafny/${MODULENAME}Tests.dfy
 ARGS="/verifyAllModules /compileTarget:java /compile:1 /spillTargetCode:1 /out:${MODULENAME}"
 

@@ -1,11 +1,96 @@
 # Dafny Unit Test Interface
 
-**Assertion Library**: provides basic assertions.
-Need to include both tags. Not just the one. But I think it better to just have the one.
-Explore what happens if you give a name for the `:extern` annotator.
+## Tests with no input
+
+Tests with no input correspond to a `[Fact]` in the XUnit framework. 
+
+The `{:test}` annotation with no arguments is a test that takes no input. The C# cross-compiler inserts the `[Xunit.Fact]` annotation on each method with the `{:test}` attribute. The Java, Go, and other cross-compilers do nothing.
 
 ```dafny
-method {extern:} {:test "JUnit5", "XUnit", ...} test_constructor_should_doNothing_when_inputValid()
+static method {:test} TestIsEmptyTrue() {
+  var list := GetEmptyList<int>();    
+  var empty := list.IsEmpty();
+  expect empty;
+}
+```
+
+The cross-compiler renders the following in C#
+
+```csharp
+[Xunit.Fact]
+public static void TestIsEmptyTrue()
+{
+  PrivateDLL_Compile.PrivateDoublyLinkedList<BigInteger> _436_list;
+  PrivateDLL_Compile.PrivateDoublyLinkedList<BigInteger> _out0;
+  _out0 = PrivateDLLTests_Compile.__default.GetEmptyList<BigInteger>();
+  _436_list = _out0;
+  bool _437_empty;
+  bool _out1;
+  _out1 = (_436_list).IsEmpty();
+  _437_empty = _out1;
+  if (!(_437_empty)) {
+    throw new Dafny.HaltException("/home/sasha/Desktop/QUIC-Dafny-Tests/QUIC/PrivateDLLTests.dfy(132,12): " + Dafny.Sequence<char>.FromString("expectation violation"));
+  }
+}
+```
+
+Here the test method uses the `expect`-statement for run-time checks. Dafny *assumes* `empty` to be true in the verification. The run-time check throws the exception if `empty` is false. 
+
+The `{test:}` attribute needs support for Java and Go. It might consider allowing the user to specify the target framework as in `{test: "JUnit5", "XUnit2.4.1"}`. 
+
+## Tests with Input
+
+Tests that take input correspond to a `[Theory]` in the XUnit framework.
+
+The `{test: "methodSource"}` annotation indicates the provider for the test method arguments. The provider should be a static method that returns a sequence of tuples. Each tuple is an input to the annotated test method.
+
+The below example uses the `assert`-based methods forcing Dafny to prove out the test method. The `requires` clause satisfies the proof.
+
+```Dafny
+static method paramterized_assert_provider() returns (testInputs : seq<(int, int, int)>)
+{
+  testInputs := [
+    (0, 0, 0),
+    (1, 1, 2),
+    (4, 7, 11)
+  ];
+}
+
+method {:test "parameterized_assert_provider"} parameterized_assert(x : int, y : int, expected : int)
+requires expected == x + y
+{
+  var sum : int := x + y;
+  Assertions.assertEquals(expected, sum);
+}
+```
+
+The same thing can be accomplished using `expect`-based tests that bypass the Dafny proof (see below).
+
+```Dafny
+static method paramterized_expect_provider() returns (testInputs : seq<(int, int, int)>)
+{
+  testInputs := paramterized_assert_provider();
+}
+
+method {:test "parameterized_expect_provider"} parameterized_expect(x : int, y : int, expected : int)
+{
+  var sum : int := x + y;
+  Assertions.expectEquals(expected, sum);
+}
+```
+
+Dafny does not prove anything about `parameterized_expect` in the above example.
+
+The automation for parameterized tests is missing at the moment, but for Java, it does require some effort. The Dafny sequence of tuples is converted to a `Stream` of `Arguments` for the JUnit 5 support. Also, Dafny does not prove out each individual test. Only the cross-compiled code recognizes each input as a separate test.
+
+## Assertion Library
+
+Dafny unit testing needs two types of assertion library: one that can be proved out and another that assumes correctness. The first lets Dafny actual prove the assertion and works in codes with relatively strong contracts on method calls. The second lets Dafny assume the assertion without proving it and works in codes with weak contracts on method calls. Both libraries provide run-time checks.
+
+There is no consensus on naming conventions in assertion libraries amongst the various test frameworks. All frameworks provide a relatively uniform set of assertions but each has a slightly different naming convention and use. The current library adopts a JUnit5 naming convention, but it could just as easily adopt an XUnit convention.
+
+```dafny
+method {:test} test_constructor_should_doNothing_when_inputValid()
 {
   var lowerBound : int := 0;
   var upperBound : int := 1;
@@ -23,45 +108,70 @@ method {extern:} {:test "JUnit5", "XUnit", ...} test_constructor_should_doNothin
 }
 ```
 
-The Assertions library `requires` the expected condition so Dafny proves out.
+The **assert**-based methods `requires` the expected condition so Dafny proves out while the **expect**-based methods `ensures` the conditions effectively *assuming* the condition. 
 
 ```dafny
 class Assertions<T> {
   static method {:extern} assertEquals(expected : T, actual : T)
   requires expected == actual
 
+  static method {:extern} expectEquals(expected : T, actual : T)
+  ensures expected == actual
+  
   static method {:extern} assertTrue(condition : bool)
   requires condition
 
+  static method {:extern} expectTrue(condition : bool)
+  ensures condition
+  
   static method {:extern} assertFalse(condition : bool)
   requires !condition
 
-  ...
-
+  static method {:extern} expectFalse(condition : bool)
+  ensures !condition
 }
 ```
 
-The is a Java implementation existing for `JUnit5`.
+The assuming behavior of the **expect**-based version of the methods match the behavior of the `expect`-statement in Dafny. The `expect cond` statement `assumes cond` and inserts a runtime check that throws an exception if `cond` is ever false at run-time in the cross-compiled program.
 
-Add an `Assertions.assertEnsures("method")` that automatically includes assertions for the contract on the method.
+The following is an example of the **expect**-based methods. Here it expects `m` to be true even though `m` is declared to be `false`.
 
-**Method Annotation** `{:test <framework>}`: indicates a method is a unit test and should be annotated as such in the generated Java file. The annotation for the test depends on the indicated framework. 
-
-```dafny
-method {:test "JUnit5"} test_constructor_should_throwException_when_lowerBoundLessThanZero() 
+```Dafny
+method {:test} test_expect_behavior()
 {
-  BoundedResponseTestSupport.checkRequires_boundedResponse(-1, 0);
+  var m : bool := false;
+
+  Assertions<bool>.expectTrue(m);
+  assert(m);
 }
 ```
 
-**Method Annotation** `{:fresh}`: indicates the method produces a fresh instance of some object. The object is unconstrained.
+Dafny proves the file correct. This behavior, assuming the condition, matches the equivalent Dafny code using the `expect`-statement.
+
+```Dafny
+method {:test} test_expect_behavior()
+{
+  var m : bool := false;
+
+  expect m;
+  assert(m);
+}
+```
+
+The library should include some means to support an `Assertions.assertEnsures("method")` that automatically includes assertions for the contract on the method.
+
+## Created Fresh Instances (zero-argument constructors)
+
+ `{:fresh}`: indicates the method produces a fresh instance of some object. The object is unconstrained.
 
 ```dafny
 static method {:fresh} fresh_IdStation() returns (idStation : IdStation)
     ensures fresh(idStation)
 ```
 
-**Method Annotation** `{:mock <framework>}`: indicates a method creates a mock.
+## Creating Mocks
+
+`{:mock}`: indicates a method creates a mock.
 
 ```dafny
 static method {:mock "Mockito"} mock_Token_OpenVersion0_NotIsValid() returns (token : Token) 
@@ -79,7 +189,10 @@ Here, `object` is the mocked object, `method` is one of the method being defined
 
 Only methods that do not side-effect can be mocked.
 
-{:mockNew }
+## Mocking with Fresh
+
+`{:mockNew }`
+
 # Test Generation Algorithms
 
   * Block coverage

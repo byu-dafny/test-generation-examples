@@ -8,17 +8,17 @@ module BoundedResponseMonitorTests {
 
   class BoundedResponseTest {
 
-    method {:test "JUnit5"} test_constructor_should_throwException_when_lowerBoundLessThanZero() 
+    method {:test} test_constructor_should_throwException_when_lowerBoundLessThanZero() 
     {
       BoundedResponseTestSupport.checkRequires_boundedResponse(-1, 0);
     }
 
-    method {:test "JUnit5"} test_constructor_should_throwException_when_upperBoundGreaterThanLowerBound() 
+    method {:test} test_constructor_should_throwException_when_upperBoundGreaterThanLowerBound() 
     {
       BoundedResponseTestSupport.checkRequires_boundedResponse(1, 0);
     }
 
-    method {:test "JUnit5"} test_constructor_should_doNothing_when_inputValid()
+    method {:test} test_constructor_should_doNothing_when_inputValid()
     {
       var lowerBound : int := 0;
       var upperBound : int := 1;
@@ -33,6 +33,41 @@ module BoundedResponseMonitorTests {
       Assertions<bool>.assertFalse(testSubject.isLatched);
       Assertions<bool>.assertFalse(testSubject.policy);
       Assertions<bool>.assertFalse(testSubject.alert);
+    }
+
+    static method paramterized_assert_provider() returns (testInputs : seq<(int, int, int)>)
+    {
+      testInputs := [
+        (0, 0, 0),
+        (1, 1, 2),
+        (4, 7, 11)
+      ];
+    }
+
+    method {:test "parameterized_assert_provider"} parameterized_assert(x : int, y : int, expected : int)
+    requires expected == x + y
+    {
+      var sum : int := x + y;
+      Assertions.assertEquals(expected, sum);
+    }
+
+    static method paramterized_expect_provider() returns (testInputs : seq<(int, int, int)>)
+    {
+      testInputs := paramterized_assert_provider();
+    }
+
+    method {:test "parameterized_expect_provider"} parameterized_expect(x : int, y : int, expected : int)
+    {
+      var sum : int := x + y;
+      Assertions.expectEquals(expected, sum);
+    }
+
+    method {:test} test_expect_behavior()
+    {
+      var m : bool := false;
+
+      Assertions<bool>.expectTrue(m);
+      assert(true);
     }
 
     method {:test "JUnit5"} testBoundedResponse() {
