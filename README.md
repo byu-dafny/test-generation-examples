@@ -1,10 +1,14 @@
 # Dafny Unit Test Interface
 
+The name of every Dafny method corresponding to a runtime test case must start with `Test` and be in PascalCase.
+Such a method should also be annotated with the `{:test}` attribute, which is compiled to a corresponding attribute in the target language (e.g., `@Test` in JUnit, etc.).
+This functionality is currently only implemented for XUnit in C#.
+One might consider allowing the user to specify the target framework as in `{test: "JUnit5", "XUnit2.4.1"}`.
+See the table at the bottom for an overview of what this and each newly introduced attribute is compiled to.
+
 ## Tests with no input
 
-Tests with no input correspond to a `[Fact]` in the XUnit framework. 
-
-The `{:test}` annotation with no arguments is a test that takes no input. The C# cross-compiler inserts the `[Xunit.Fact]` annotation on each method with the `{:test}` attribute. The Java, Go, and other cross-compilers do nothing.
+The `{:test}` annotation with no arguments is a test that takes no input. The C# cross-compiler inserts the `[Xunit.Fact]` annotation on each method with the `{:test}` attribute.
 
 ```dafny
 static method {:test} TestIsEmptyTrue() {
@@ -34,9 +38,7 @@ public static void TestIsEmptyTrue()
 }
 ```
 
-Here the test method uses the `expect`-statement for run-time checks. Dafny *assumes* `empty` to be true in the verification. The run-time check throws the exception if `empty` is false. 
-
-The `{test:}` attribute needs support for Java and Go. It might consider allowing the user to specify the target framework as in `{test: "JUnit5", "XUnit2.4.1"}`. 
+Here the test method uses the `expect`-statement for run-time checks. Dafny *assumes* `empty` to be true in the verification. The run-time check throws the exception if `empty` is false.
 
 ## Tests with Input
 
