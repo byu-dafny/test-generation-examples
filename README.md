@@ -171,7 +171,8 @@ static method {:fresh} fresh_IdStation() returns (idStation : IdStation)
 
 ## Creating Mocks
 
-`{:mock}`: indicates a method creates a mock.
+Methods annotated with `{:mock}` return one or several fresh objects mocked in the target language.
+
 
 ```dafny
 static method {:mock "Mockito"} mock_Token_OpenVersion0_NotIsValid() returns (token : Token) 
@@ -188,10 +189,6 @@ A method annotated with `{:mock}` may take some parameters, `x,y,...`. Post-cond
 Here, `object` is the mocked object, `method` is one of the method being defined in the mock, `func1` defines allowed inputs parameters, and `func2` is the return. 
 
 Only methods that do not side-effect can be mocked.
-
-## Mocking with Fresh
-
-`{:mockNew }`
 
 # Test Generation Algorithms
 
