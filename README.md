@@ -204,3 +204,15 @@ Only methods that do not side-effect can be mocked.
 # Oracle Generation
 
 Synthesize oracles from ensures-statements on contracts.
+
+# Summary of the testing framework
+
+| Dafny Syntax                                      | Meaning                                                                                    | Java (JUnit/Mockito)                                   | C# (XUnit/Moq)                    | Go               |
+|---------------------------------------------------|--------------------------------------------------------------------------------------------|--------------------------------------------------------|-----------------------------------|------------------|
+| `{:test}` attribute                               | Method can be run as a test case.  Method name must start with `Test` and be in PascalCase | `@Test`                                                | `[Fact]`                          |                  |
+| `{:test M}` attribute with parameter              | Method is a parameterized test case, with `M` being the provider.                          | `@ParameterizedTest` with `@MethodSource`              | `[Theory]` with `[MemberData]`    |                  |
+| `{:fresh}` attribute                              | Method returns an unconstrained fresh object (`:fresh` implies `:extern`)                  | Zero-constructor                                       | Zero-constructor                  | Zero-constructor |
+| `{:mock} M() returns (o:Object) requires...`      | Creating a mock (`:mock` implies `:extern`)                                                | `Mockito.mock(Object.class)`                           | `var m = new Mock<Object>()`      |                  |
+| `...o.Do() == 0`                                  | Stubbing a method                                                                          | `Mockito.doReturn(0).when(o).Do()`                     | `m.Setup(o => o.Do()).Returns(0)` |                  |
+| `...forall a:int :: ((a == 0) => (o.Do(a) == 0))` | Stubbing a method for certain inputs                                                       | Custom `ArgumentMatcher` needed for multiple arguments | Similar to Java                   |                  |
+| `...forall a:int :: (o.Do(a) == a)`               | Stubbing a method with a return value that depends on the arguments                        | Mockito's `thenAnswer`                                 | `.Returns<int>(x => x);`          |                  |
