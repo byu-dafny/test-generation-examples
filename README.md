@@ -44,12 +44,12 @@ Here the test method uses the `expect`-statement for run-time checks. Dafny *ass
 
 Tests that take input correspond to a `[Theory]` in the XUnit framework.
 
-The `{test: "methodSource"}` annotation indicates the provider for the test method arguments. The provider should be a static method that returns a sequence of tuples. Each tuple is an input to the annotated test method.
+The `{test: "MethodSource"}` annotation indicates the provider for the test method arguments. The provider should be a static method that returns a sequence of tuples. Each tuple is an input to the annotated test method.
 
 The below example uses the `assert`-based methods forcing Dafny to prove out the test method. The `requires` clause satisfies the proof.
 
 ```Dafny
-static method paramterized_assert_provider() returns (testInputs : seq<(int, int, int)>)
+static method ParamterizedAssertProvider() returns (testInputs : seq<(int, int, int)>)
 {
   testInputs := [
     (0, 0, 0),
@@ -58,30 +58,30 @@ static method paramterized_assert_provider() returns (testInputs : seq<(int, int
   ];
 }
 
-method {:test "parameterized_assert_provider"} parameterized_assert(x : int, y : int, expected : int)
+method {:test "ParameterizedAssertProvider"} TestParameterizedAssert(x : int, y : int, expected : int)
 requires expected == x + y
 {
   var sum : int := x + y;
-  Assertions.assertEquals(expected, sum);
+  Assertions.AssertEquals(expected, sum);
 }
 ```
 
 The same thing can be accomplished using `expect`-based tests that bypass the Dafny proof (see below).
 
 ```Dafny
-static method paramterized_expect_provider() returns (testInputs : seq<(int, int, int)>)
+static method ParamterizedExpectProvider() returns (testInputs : seq<(int, int, int)>)
 {
-  testInputs := paramterized_assert_provider();
+  testInputs := ParamterizedAssertProvider();
 }
 
-method {:test "parameterized_expect_provider"} parameterized_expect(x : int, y : int, expected : int)
+method {:test "ParameterizedExpectProvider"} TestParameterizedExpect(x : int, y : int, expected : int)
 {
   var sum : int := x + y;
-  Assertions.expectEquals(expected, sum);
+  Assertions.ExpectEquals(expected, sum);
 }
 ```
 
-Dafny does not prove anything about `parameterized_expect` in the above example.
+Dafny does not prove anything about `TestParameterizedExpect` in the above example.
 
 The automation for parameterized tests is missing at the moment, but for Java, it does require some effort. The Dafny sequence of tuples is converted to a `Stream` of `Arguments` for the JUnit 5 support. Also, Dafny does not prove out each individual test. Only the cross-compiled code recognizes each input as a separate test.
 
@@ -92,44 +92,44 @@ Dafny unit testing needs two types of assertion library: one that can be proved 
 There is no consensus on naming conventions in assertion libraries amongst the various test frameworks. All frameworks provide a relatively uniform set of assertions but each has a slightly different naming convention and use. The current library adopts a JUnit5 naming convention, but it could just as easily adopt an XUnit convention.
 
 ```dafny
-method {:test} test_constructor_should_doNothing_when_inputValid()
+method {:test} TestConstructorShouldDoNothingWhenInputValid()
 {
   var lowerBound : int := 0;
   var upperBound : int := 1;
 
   var testSubject : BoundedResponse<int> :=
-    new BoundedResponse.boundedResponse(lowerBound, upperBound);
+    new BoundedResponse.BoundedResponse(lowerBound, upperBound);
     
-  Assertions<int>.assertEquals(testSubject.ALERT, upperBound + 1);
-  Assertions<int>.assertEquals(testSubject.LOWERBOUND, lowerBound);
-  Assertions<int>.assertEquals(testSubject.UPPERBOUND, upperBound);
-  Assertions<int>.assertEquals(testSubject.state, testSubject.INIT);
-  Assertions<bool>.assertFalse(testSubject.isLatched);
-  Assertions<bool>.assertFalse(testSubject.policy);
-  Assertions<bool>.assertFalse(testSubject.alert);
+  Assertions<int>.AssertEquals(testSubject.ALERT, upperBound + 1);
+  Assertions<int>.AssertEquals(testSubject.LOWERBOUND, lowerBound);
+  Assertions<int>.AssertEquals(testSubject.UPPERBOUND, upperBound);
+  Assertions<int>.AssertEquals(testSubject.state, testSubject.INIT);
+  Assertions<bool>.AssertFalse(testSubject.isLatched);
+  Assertions<bool>.AssertFalse(testSubject.policy);
+  Assertions<bool>.AssertFalse(testSubject.alert);
 }
 ```
 
-The **assert**-based methods `requires` the expected condition so Dafny proves out while the **expect**-based methods `ensures` the conditions effectively *assuming* the condition. 
+The **assert**-based methods `requires` the expected condition so Dafny proves out while the **expect**-based methods `ensures` the conditions effectively *assuming* the condition.
 
 ```dafny
 class Assertions<T> {
-  static method {:extern} assertEquals(expected : T, actual : T)
+  static method {:extern} AssertEquals(expected : T, actual : T)
   requires expected == actual
 
-  static method {:extern} expectEquals(expected : T, actual : T)
+  static method {:extern} ExpectEquals(expected : T, actual : T)
   ensures expected == actual
   
-  static method {:extern} assertTrue(condition : bool)
+  static method {:extern} AssertTrue(condition : bool)
   requires condition
 
-  static method {:extern} expectTrue(condition : bool)
+  static method {:extern} ExpectTrue(condition : bool)
   ensures condition
   
-  static method {:extern} assertFalse(condition : bool)
+  static method {:extern} AssertFalse(condition : bool)
   requires !condition
 
-  static method {:extern} expectFalse(condition : bool)
+  static method {:extern} ExpectFalse(condition : bool)
   ensures !condition
 }
 ```
@@ -139,11 +139,11 @@ The assuming behavior of the **expect**-based version of the methods match the b
 The following is an example of the **expect**-based methods. Here it expects `m` to be true even though `m` is declared to be `false`.
 
 ```Dafny
-method {:test} test_expect_behavior()
+method {:test} TestExpectBehavior()
 {
   var m : bool := false;
 
-  Assertions<bool>.expectTrue(m);
+  Assertions<bool>.ExpectTrue(m);
   assert(m);
 }
 ```
@@ -151,7 +151,7 @@ method {:test} test_expect_behavior()
 Dafny proves the file correct. This behavior, assuming the condition, matches the equivalent Dafny code using the `expect`-statement.
 
 ```Dafny
-method {:test} test_expect_behavior()
+method {:test} TestExpectBehavior()
 {
   var m : bool := false;
 
@@ -160,14 +160,14 @@ method {:test} test_expect_behavior()
 }
 ```
 
-The library should include some means to support an `Assertions.assertEnsures("method")` that automatically includes assertions for the contract on the method.
+The library should include some means to support an `Assertions.AssertEnsures("method")` that automatically includes assertions for the contract on the method.
 
 ## Created Fresh Instances (zero-argument constructors)
 
- `{:fresh}`: indicates the method produces a fresh instance of some object. The object is unconstrained.
+`{:fresh}`: indicates the method produces a fresh instance of some object. The object is unconstrained.
 
 ```dafny
-static method {:fresh} fresh_IdStation() returns (idStation : IdStation)
+static method {:fresh} FreshIdStation() returns (idStation : IdStation)
     ensures fresh(idStation)
 ```
 
@@ -177,18 +177,18 @@ Methods annotated with `{:mock}` return one or several fresh objects mocked in t
 
 
 ```dafny
-static method {:mock "Mockito"} mock_Token_OpenVersion0_NotIsValid() returns (token : Token) 
+static method {:mock "Mockito"} MockTokenOpenVersionNotIsValid() returns (token : Token) 
   ensures fresh(token)
-  ensures forall fingerprint : int :: token.f_isValid(fingerprint) == false;
+  ensures forall fingerprint : int :: token.FIsValid(fingerprint) == false;
 ```
 
 A method annotated with `{:mock}` may take some parameters, `x,y,...`. Post-conditions define the behavior of the mock using universal (or existential) quantifiers.
 
  ```
- forall a,b,... :: (func1(a,b,...) => object.method(a,b,...) == func2(a,b,...,x,y,...))
+ forall a,b,... :: (func1(a,b,...) => object.Method(a,b,...) == func2(a,b,...,x,y,...))
  ```
- 
-Here, `object` is the mocked object, `method` is one of the method being defined in the mock, `func1` defines allowed inputs parameters, and `func2` is the return. 
+
+Here, `object` is the mocked object, `Method` is one of the method being defined in the mock, `func1` defines allowed inputs parameters, and `func2` is the return.
 
 Only methods that do not side-effect can be mocked.
 
