@@ -1,35 +1,27 @@
-include "Tokeneer.dfy"
-
 module Utils {
-  import opened Tokeneer
+  class Assertions<T> {
+    static method {:extern} assertEquals(expected : T, actual : T)
+    requires expected == actual
 
-  class JUnit5 {
-    static method {:extern} assertEquals(left : bool, right : bool)
-    ensures true
+    static method {:extern} expectEquals(expected : T, actual : T)
+    ensures expected == actual
 
-    static method {:extern} assertTrue(value : bool)
-    ensures true
+    static method {:extern} assertNotEquals(expected : T, actual : T)
+    requires expected != actual
 
-    static method {:extern} assertFalse(value : bool)
-    ensures true
-  }
+    static method {:extern} expectNotEquals(expected : T, actual : T)
+    ensures expected != actual
 
-  class IdStationUtils {
-    static method {:fresh} fresh_IdStation() returns (idStation : IdStation)
-    ensures fresh(idStation)
+    static method {:extern} assertTrue(condition : bool)
+    requires condition
 
-    static method {:mock} mock_Token_OpenVersion0_NotIsValid() returns (token : Token) 
-    ensures fresh(token)
-    ensures forall fingerprint : int :: token.f_isValid(fingerprint) == false;
+    static method {:extern} expectTrue(condition : bool)
+    ensures condition
+    
+    static method {:extern} assertFalse(condition : bool)
+    requires !condition
 
-    static method {:mock} mock_Token_OpenVersion0_IsValid_NotHasClearance() returns (token : Token) 
-    ensures fresh(token)
-    ensures forall fingerprint : int :: token.f_isValid(fingerprint) == true;
-    ensures token.getClearanceLevel() == Confidential
-
-    static method {:mock} mock_Token_OpenVersion0_IsValid_HasClearance() returns (token : Token) 
-    ensures fresh(token)
-    ensures forall fingerprint : int :: token.f_isValid(fingerprint) == true;
-    ensures token.getClearanceLevel() == TopSecret
+    static method {:extern} expectFalse(condition : bool)
+    ensures !condition
   }
 }

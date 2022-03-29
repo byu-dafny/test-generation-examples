@@ -1,17 +1,21 @@
 module Utils {
+  class Assertions<T> {
+    static method {:extern} assertEquals(expected : T, actual : T)
+    requires expected == actual
 
-    class JUnit5 {
+    static method {:extern} expectEquals(expected : T, actual : T)
+    ensures expected == actual
 
-        static method {:axiom} assertEquals<T>(left : T, right : T)
-        requires left == right
+    static method {:extern} assertTrue(condition : bool)
+    requires condition
 
-        static method {:axiom} assertNotEquals<T>(left : T, right : T)
-        requires left != right
+    static method {:extern} expectTrue(condition : bool)
+    ensures condition
+    
+    static method {:extern} assertFalse(condition : bool)
+    requires !condition
 
-        static method {:axiom} assertTrue(value : bool)
-        requires value
-
-        static method {:axiom} assertFalse(value : bool)
-        requires !value
-    }
+    static method {:extern} expectFalse(condition : bool)
+    ensures !condition
+  }
 }

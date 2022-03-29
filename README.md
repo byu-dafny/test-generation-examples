@@ -85,9 +85,9 @@ Dafny does not prove anything about `TestParameterizedExpect` in the above examp
 
 The automation for parameterized tests is missing at the moment, but for Java, it does require some effort. The Dafny sequence of tuples is converted to a `Stream` of `Arguments` for the JUnit 5 support. Also, Dafny does not prove out each individual test. Only the cross-compiled code recognizes each input as a separate test.
 
-## Assertion Library
+## Assertions Library
 
-Dafny unit testing needs two types of assertion library: one that can be proved out and another that assumes correctness. The first lets Dafny actual prove the assertion and works in codes with relatively strong contracts on method calls. The second lets Dafny assume the assertion without proving it and works in codes with weak contracts on method calls. Both libraries provide run-time checks.
+Dafny unit testing needs two types of assertions: one that can be proved out and another that assumes correctness. The first lets Dafny actual prove the assertion and works in codes with relatively strong contracts on method calls. The second lets Dafny assume the assertion without proving it and works in codes with weak contracts on method calls. Both types provide run-time checks.
 
 There is no consensus on naming conventions in assertion libraries amongst the various test frameworks. All frameworks provide a relatively uniform set of assertions but each has a slightly different naming convention and use. The current library adopts a JUnit5 naming convention, but it could just as easily adopt an XUnit convention.
 
@@ -215,3 +215,15 @@ Synthesize oracles from ensures-statements on contracts.
 | `...o.Do() == 0`                                  | Stubbing a method                                                                          | `Mockito.doReturn(0).when(o).Do()`                     | `m.Setup(o => o.Do()).Returns(0)` |                  |
 | `...forall a:int :: ((a == 0) => (o.Do(a) == 0))` | Stubbing a method for certain inputs                                                       | Custom `ArgumentMatcher` needed for multiple arguments | Similar to Java                   |                  |
 | `...forall a:int :: (o.Do(a) == a)`               | Stubbing a method with a return value that depends on the arguments                        | Mockito's `thenAnswer`                                 | `.Returns<int>(x => x);`          |                  |
+
+## How to use our tool
+
+In the base directory of this repository, you will find 2 template bash scripts: one for compiling Dafny to Java and the other for compiling Dafny to C#.
+
+In order to use these scripts, copy the desired script to the directory of the example you wish to compile. Open the script, and look for "TODO" comments.
+In these comments, you will find detailed instructions on how to set up the script. After you run the script, you should be able to run and pass the 
+generated tests.
+
+To run Java tests: mvn -DTest="TestClass" test
+
+To run C# tests: dotnet test DafnyTests.csproj

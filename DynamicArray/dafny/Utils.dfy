@@ -1,24 +1,29 @@
 include "DynamicArray.dfy"
 
 module Utils {
-    import opened DynamicArray
+  import opened DynamicArray
+  class Assertions<T> {
+    static method {:extern} assertEquals(expected : T, actual : T)
+    requires expected == actual
 
-    class JUnit5 {
-        static method {:axiom} assertEquals<T>(left : T, right : T)
-        requires left == right
+    static method {:extern} expectEquals(expected : T, actual : T)
+    ensures expected == actual
 
-        static method {:axiom} assertTrue(value : bool)
-        requires value
+    static method {:extern} assertTrue(condition : bool)
+    requires condition
 
-        static method {:axiom} assertFalse(value : bool)
-        requires !value
+    static method {:extern} expectTrue(condition : bool)
+    ensures condition
+    
+    static method {:extern} assertFalse(condition : bool)
+    requires !condition
 
-        static method {:axiom} assertThrowsAfterPushBack(v : Vector)
-        ensures true
-    }
+    static method {:extern} expectFalse(condition : bool)
+    ensures !condition
+  }
 
     class DynamicArrayUtils<T> {
-        static method /*{:axiom}*/ fresh_DynamicArray(t : T) returns (vector : Vector<T>)
+        static method fresh_DynamicArray(t : T) returns (vector : Vector<T>)
         ensures vector.Valid()
         ensures fresh(vector.buffer)
         ensures vector.current_size == 0

@@ -8,7 +8,7 @@ module FindAndReplaceTests {
 
     class FindAndReplaceTests {
 
-        method {:test "JUnit5"} test_findAndReplace_should_replaceWordInMiddleOfStr()
+        method {:test} test_findAndReplace_should_replaceWordInMiddleOfStr()
         {
             var str := "tis";
             var toFind := "is";
@@ -17,14 +17,14 @@ module FindAndReplaceTests {
             var witnessValue := "ah";
 
             assert witnessValue != toFind;
-            JUnit5.assertNotEquals(witnessValue, toFind);
+            Assertions<bool>.assertFalse(witnessValue == toFind);
 
             var result := findAndReplace(str, toFind, toReplace);
 
             var oracleValue := "twas";
 
             assert result == oracleValue;
-            JUnit5.assertEquals(result, oracleValue);
+            Assertions.assertEquals(result, oracleValue);
         }
     }
 }

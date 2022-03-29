@@ -16,7 +16,7 @@ module Tokeneer {
       valid := true;
     }
 
-    function method f_isValid(fingerprint : int) : bool
+    function method fIsValid(fingerprint : int) : bool
     reads `valid, `fingerprint 
     { 
       (valid && (fingerprint == this.fingerprint))
@@ -26,15 +26,6 @@ module Tokeneer {
     reads `clearanceLevel 
     { 
       clearanceLevel
-    }
-
-    method isValid(fingerprint : int) returns (valid : bool) 
-    modifies `valid
-    ensures this.valid == old(f_isValid(fingerprint))
-    ensures valid == this.valid 
-    {
-      this.valid := f_isValid(fingerprint);
-      return this.valid;
     }
   }
 
@@ -78,10 +69,10 @@ module Tokeneer {
     method openVersion0(t : Token, fingerprint : int) returns (access :  bool)
     modifies t`valid, `access;
     requires this.access == false
-    ensures this.access == (old(t.f_isValid(fingerprint)) && hasSecurityClearance(t)) 
+    ensures this.access == (old(t.fIsValid(fingerprint)) && hasSecurityClearance(t)) 
     ensures access == this.access
     {
-      var isValid := t.isValid(fingerprint);
+      var isValid := t.fIsValid(fingerprint);
       var hasSecurityClearance := hasSecurityClearance(t);
       this.access := isValid && hasSecurityClearance;
       return this.access;
@@ -90,13 +81,13 @@ module Tokeneer {
     method openVersion1(t : Token, fingerprint : int) returns (access :  bool)
     modifies t`valid, `access;
     requires this.access == false
-    ensures (old(t.f_isValid(fingerprint)) && hasSecurityClearance(t)) == this.access
+    ensures (old(t.fIsValid(fingerprint)) && hasSecurityClearance(t)) == this.access
     ensures access == this.access
     {
-      var isValid := t.isValid(fingerprint);
+      var isValid := t.fIsValid(fingerprint);
       if (isValid) {
         if (hasSecurityClearance(t)) {
-          this.access := t.isValid(fingerprint);
+          this.access := t.fIsValid(fingerprint);
         }
       }
       return this.access;

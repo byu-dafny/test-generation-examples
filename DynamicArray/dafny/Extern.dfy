@@ -7,10 +7,15 @@
 
 include "NativeTypes.dfy"
 
-module /*{:extern "Extern"}*/ Extern {
+module Extern {
   import opened NativeTypes
 
-method /*{:extern "Extern", "newArrayFill"}*/ newArrayFill<T>(n: uint16, t: T) returns (ar: array<T>)
+// insert this code into the extern file:
+// public static void fatal(DafnySequence<java.lang.Character> msg) {
+//   throw new AssertionError();
+// }
+
+method newArrayFill<T>(n: uint16, t: T) returns (ar: array<T>)
   ensures ar.Length == n as int
   ensures forall i | 0 <= i < n :: ar[i] == t
   ensures fresh(ar)
@@ -19,7 +24,6 @@ method /*{:extern "Extern", "newArrayFill"}*/ newArrayFill<T>(n: uint16, t: T) r
   arr := new T[n](i => t);
   return arr;
 }
-
 
   method {:extern "Extern", "fatal"} fatal(m:string)
     ensures false

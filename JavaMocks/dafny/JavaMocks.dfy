@@ -1,12 +1,10 @@
-
-
 module JavaMocks {
 
   class Even {
 
       var value: int;
 
-      function method IsValid() : bool reads this 
+      function method IsValid() : bool reads this
       {
           this.value % 2 == 0
       }

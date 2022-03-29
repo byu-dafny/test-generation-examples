@@ -31,6 +31,19 @@ module DynamicArray {
         var current_capacity :uint16
         var current_size :uint16
 
+        constructor(default_val:T)
+            ensures Valid()
+            ensures fresh(buffer)
+            ensures current_size == 0
+            ensures current_capacity == DEFAULT_SIZE 
+            ensures current_capacity as int == buffer.Length
+        {
+            current_size := 0;
+            current_capacity := DEFAULT_SIZE;
+            new;
+            buffer := newArrayFill(DEFAULT_SIZE, default_val);
+        }
+
         predicate Valid()
             reads this, buffer
         {
@@ -119,19 +132,6 @@ module DynamicArray {
             ensures current_size == 0
         {
             current_size := 0;
-        }
-
-        constructor(default_val:T)
-            ensures Valid()
-            ensures fresh(buffer)
-            ensures current_size == 0
-            ensures current_capacity == DEFAULT_SIZE 
-            ensures current_capacity as int == buffer.Length
-        {
-            current_size := 0;
-            current_capacity := DEFAULT_SIZE;
-            new;
-            buffer := newArrayFill(DEFAULT_SIZE, default_val);
         }
     }
 }

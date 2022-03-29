@@ -1,6 +1,3 @@
-
-include "IntegerSet.dfy"
-
 module Utils {
   class Assertions<T> {
     static method {:extern} assertEquals(expected : T, actual : T)

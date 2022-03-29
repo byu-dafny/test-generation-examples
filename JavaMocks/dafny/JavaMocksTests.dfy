@@ -1,5 +1,3 @@
-// RUN: %dafny /compileVerbose:1 /compile:2 /spillTargetCode:3 /compileTarget:java /noVerify "%s" > "%t"
-
 include "JavaMocks.dfy"
 include "Utils.dfy"
 
@@ -61,25 +59,5 @@ module JavaMocksTests {
         Assertions<bool>.assertTrue(e.Sum(3, 2) == 3);
         Assertions.assertEquals(e.Sum(100, 3), 3);
     }
-
-    method {:extern} {:mock} MockSumAsMultiplication() returns (e:Even) 
-        ensures fresh(e) 
-        ensures forall a:int :: e.Sum(3, a) == a * 3
-        
-    method {:test} PassingTestMockSumAsMultiplication() {
-        var e:Even := MockSumAsMultiplication();
-        Assertions<bool>.assertTrue(e.Sum(3, 2) == 6);
-        Assertions<bool>.assertTrue(e.Sum(3, 0) == 0);
-    }
-
-    // method {:extern} {:mock} ParametrizedMock(a: int) returns (e:Even) 
-    //     ensures fresh(e) 
-    //     ensures e.value == a;
-        
-    // method {:test} PassingParameterizedMock() {
-    //     var e:Even := ParametrizedMock(24);
-    //     expect(e.value == 24);
-    //     expect(e.value != 7);
-    // }
   }
 }

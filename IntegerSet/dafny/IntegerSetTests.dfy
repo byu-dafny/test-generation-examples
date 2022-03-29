@@ -23,8 +23,8 @@ module IntegerSetTests {
             // check ensures
 
             // size is correct
-            assert(size == 3);
-            Assertions<int>.assertEquals(3, size);
+            assert(3 == size);
+            Assertions.assertEquals(3, size);
 
         }
         
@@ -52,8 +52,8 @@ module IntegerSetTests {
 
             // new length is correct
             var size := testSet.size();
-            assert(size == 4);
-            Assertions<int>.assertEquals(4, size);
+            assert(4 == size);
+            Assertions.assertEquals(4, size);
 
             // no duplicate values
             assert(forall i, j | 0 <= i < size && 0 <= j < size && j != i :: testSet.elements[i] != testSet.elements[j]);
@@ -80,8 +80,8 @@ module IntegerSetTests {
 
             // length has not changed
             var size := testSet.size();
-            assert(size == 3);
-            Assertions<int>.assertEquals(3, size);
+            assert(3 == size);
+            Assertions.assertEquals(3, size);
 
             // no duplicate values
             assert(forall i, j | 0 <= i < size && 0 <= j < size && j != i :: testSet.elements[i] != testSet.elements[j]);
@@ -112,8 +112,30 @@ module IntegerSetTests {
 
             // length has decreased
             var size := testSet.size();
-            assert(size == 2);
-            Assertions<int>.assertEquals(2, size);
+            assert(2 == size);
+            Assertions.assertEquals(2, size);
+
+            // no duplicates
+            assert(forall i, j | 0 <= i < size && 0 <= j < size && j != i :: testSet.elements[i] != testSet.elements[j]);
+            Assertions<bool>.assertTrue(forall i, j | 0 <= i < size && 0 <= j < size && j != i :: testSet.elements[i] != testSet.elements[j]);
+
+            // remove element: we remove one more element to ensure branch coverage
+            testSet.removeElement(1);
+
+            // check ensures
+
+            // element is no longer in set
+            assert(1 !in testSet.elements);
+            Assertions<bool>.assertTrue(1 !in testSet.elements);
+
+            // all other elements still in set
+            assert(2 in testSet.elements);
+            Assertions<bool>.assertTrue(2 in testSet.elements);
+
+            // length has decreased
+            size := testSet.size();
+            assert(1 == size);
+            Assertions.assertEquals(1, size);
 
             // no duplicates
             assert(forall i, j | 0 <= i < size && 0 <= j < size && j != i :: testSet.elements[i] != testSet.elements[j]);
@@ -140,8 +162,8 @@ module IntegerSetTests {
 
             // length is the same
             var size := testSet.size();
-            assert(size == 3);
-            Assertions<int>.assertEquals(3, size);
+            assert(3 == size);
+            Assertions.assertEquals(3, size);
 
             // no duplicates
             assert(forall i, j | 0 <= i < size && 0 <= j < size && j != i :: testSet.elements[i] != testSet.elements[j]);
@@ -216,17 +238,13 @@ module IntegerSetTests {
             assert(1 in finalSet.elements);
             Assertions<bool>.assertTrue(1 in finalSet.elements);
 
-            // non-common elements are not in the final set
-            assert(forall i :: i != 1 ==> i !in finalSet.elements);
-            // JUnit5.assertTrue(forall i :: i != 1 ==> i !in finalSet.elements);
-
             // length is 1
             var size := finalSet.size();
-            expect(size == 1);
-            Assertions<int>.expectEquals(size, 1);
+            expect(1 == size);
+            Assertions.expectEquals(size, 1);
 
             // no duplicates
-            assert(forall i, j | 0 <= i < size && 0 <= j < size && j != i :: finalSet.elements[i] != finalSet.elements[j]);
+            assert(forall i, j | 0 <= i < size && 0 <= j < size && j != i :: testSet.elements[i] != testSet.elements[j]);
             Assertions<bool>.assertTrue(forall i, j | 0 <= i < size && 0 <= j < size && j != i :: finalSet.elements[i] != finalSet.elements[j]);
 
         }
@@ -246,17 +264,13 @@ module IntegerSetTests {
 
             // check ensures
 
-            // check that there are no elements in the final set
-            assert(forall i :: i !in finalSet.elements);
-            // JUnit5.assertTrue(forall i :: i !in finalSet.elements);
-
             // length is 0
             var size := finalSet.size();
-            expect(size == 0);
-            Assertions<int>.expectEquals(size, 0);
+            expect(0 == size);
+            Assertions.expectEquals(size, 0);
 
             // no duplicates
-            assert(forall i, j | 0 <= i < size && 0 <= j < size && j != i :: finalSet.elements[i] != finalSet.elements[j]);
+            assert(forall i, j | 0 <= i < size && 0 <= j < size && j != i :: testSet.elements[i] != testSet.elements[j]);
             Assertions<bool>.assertTrue(forall i, j | 0 <= i < size && 0 <= j < size && j != i :: finalSet.elements[i] != finalSet.elements[j]);
 
         }
@@ -282,17 +296,12 @@ module IntegerSetTests {
             assert(1 in finalSet.elements && 2 in finalSet.elements && 3 in finalSet.elements && 5 in finalSet.elements && 6 in finalSet.elements);
             Assertions<bool>.assertTrue(1 in finalSet.elements && 2 in finalSet.elements && 3 in finalSet.elements && 5 in finalSet.elements && 6 in finalSet.elements);
 
-            // nothing in the final set that is not supposed to be
-            assert(forall i | i != 1 && i != 2 && i != 3 && i != 5 && i != 6 :: i !in finalSet.elements);
-            // JUnit5.assertTrue(forall i : int :: i != 1 && i != 2 && i != 3 && i != 4 && i != 5 && i != 6 ==> i !in finalSet.elements);
-
             // length is 5
             var size := finalSet.size();
-            expect(size == 5);
-            Assertions<int>.expectEquals(size, 5);
+            expect(5 == size);
+            Assertions.expectEquals(size, 5);
 
             // no duplicates
-            assert(forall i, j | 0 <= i < size && 0 <= j < size && j != i :: finalSet.elements[i] != finalSet.elements[j]);
             Assertions<bool>.assertTrue(forall i, j | 0 <= i < size && 0 <= j < size && j != i :: finalSet.elements[i] != finalSet.elements[j]);
 
         }
@@ -316,17 +325,12 @@ module IntegerSetTests {
             assert(1 in finalSet.elements && 2 in finalSet.elements && 3 in finalSet.elements && 4 in finalSet.elements && 5 in finalSet.elements && 6 in finalSet.elements);
             Assertions<bool>.assertTrue(1 in finalSet.elements && 2 in finalSet.elements && 3 in finalSet.elements && 4 in finalSet.elements && 5 in finalSet.elements && 6 in finalSet.elements);
 
-            // nothing in the final set that is not supposed to be
-            assert(forall i | i != 1 && i != 2 && i != 3 && i != 4 && i != 5 && i != 6 :: i !in finalSet.elements);
-            // Assertions<bool>.assertTrue(forall i : int :: i != 1 && i != 2 && i != 3 && i != 4 && i != 5 && i != 6 ==> i !in finalSet.elements);
-
             // length is 6
             var size := finalSet.size();
-            expect(size == 6);
-            Assertions<int>.expectEquals(size, 6);
+            expect(6 == size);
+            Assertions.expectEquals(size, 6);
 
             // no duplicates
-            assert(forall i, j | 0 <= i < size && 0 <= j < size && j != i :: finalSet.elements[i] != finalSet.elements[j]);
             Assertions<bool>.assertTrue(forall i, j | 0 <= i < size && 0 <= j < size && j != i :: finalSet.elements[i] != finalSet.elements[j]);
         }
         
