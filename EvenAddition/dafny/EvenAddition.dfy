@@ -1,4 +1,4 @@
-module JavaMocks {
+module EvenAddition {
 
   class Even {
 

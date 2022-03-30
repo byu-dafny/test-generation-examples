@@ -1,9 +1,9 @@
-include "JavaMocks.dfy"
+include "EvenAddition.dfy"
 include "Utils.dfy"
 
-module JavaMocksTests {
+module EvenAdditionTests {
 
-  import opened JavaMocks
+  import opened EvenAddition
   import opened Utils
 
   class EvenTests {
