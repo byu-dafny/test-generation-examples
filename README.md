@@ -218,7 +218,7 @@ Synthesize oracles from ensures-statements on contracts.
 
 ## How to use our tool
 
-In the base directory of this repository, you will find 2 template bash scripts: one for compiling Dafny to Java and the other for compiling Dafny to C#.
+In the root directory of this repository, you will find 2 template bash scripts: one for compiling Dafny to Java and the other for compiling Dafny to C#.
 
 In order to use these scripts, copy the desired script to the directory of the example you wish to compile. Open the script, and look for "TODO" comments.
 In these comments, you will find detailed instructions on how to set up the script. After you run the script, you should be able to run and pass the 
