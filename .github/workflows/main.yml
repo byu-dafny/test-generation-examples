@@ -32,5 +32,5 @@ jobs:
         mv z3-4.8.5-x64-ubuntu-16.04 dafny/Binaries/z3
     - name: Run C# Tests
       run: |
-        dotnet dafny/Binaries/Dafny.dll /compileVerbose:1 /compile:2 /spillTargetCode:3 /noVerify /out:DoublyLinkedList/PrivateDLLTests.cs DoublyLinkedList/dafny/PrivateDLLTests.dfy
+        (dotnet dafny/Binaries/Dafny.dll /compileVerbose:1 /compile:2 /spillTargetCode:3 /noVerify /out:DoublyLinkedList/PrivateDLLTests.cs DoublyLinkedList/dafny/PrivateDLLTests.dfy) || true
         dotnet test DoublyLinkedList/DoublyLinkedList.csproj
