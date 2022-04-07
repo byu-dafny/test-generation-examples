@@ -1,177 +1,219 @@
 include "Extern.dfy"
+include "Utils.dfy"
 
-import opened extern
+module SatelliteUplink {
 
-// newtype double = d: real | -128.0 <= d < 128.0
+    import opened Extern
+    import opened Utils
 
-class SatelliteUplink {
+    class SatelliteUplink {
 
-    var satConn : SatConn?;
-    var currentData : SatelliteDataCache?;
-    var previousData : SatelliteDataCache?;
+        var satConn : SatConn?;
+        var currentData : SatelliteDataCache?;
+        var previousData : SatelliteDataCache?;
 
-    // Current Data Ghosts
-    ghost var ghostCurrentHumidityLevel : real;
-    ghost var ghostCurrentAirPressure : real;
-    ghost var ghostCurrentTemperature : real;
-    ghost var ghostCurrentWindSpeed : real;
+        // Maximum allowed value for this system
+        const MAX_VALUE := 100000 as Int;
 
-    // Previous Data Ghosts
-    ghost var ghostPreviousHumidityLevel : real;
-    ghost var ghostPreviousAirPressure : real;
+        // Constants for instrument readings
+        const MAX_HUMIDITY := 100 as Int;
+        const MAX_WINDSPEED := 200 as Int;
+        const MAX_AIR_PRESSURE := 1100 as Int;
+        const MAX_TEMPERATURE := 175 as Int;
 
-    // Validity predicate
-    predicate validSatelliteUplink()
-    reads this`satConn
-    reads this`currentData
-    reads this`previousData
-    {
-        satConn != null
-        && currentData != null
-        && previousData != null
-    }
+        const MIN_HUMIDITY := 0 as Int;
+        const MIN_WINDSPEED := 0 as Int;
+        const MIN_AIR_PRESSURE := 800 as Int;
+        const MIN_TEMPERATURE := -175 as Int;
 
-    function method abs(val : real) : real
-    {
-        if val < 0.0 then -val else val
-    }
+        // Current Data Ghosts
+        ghost var ghostCurrentHumidityLevel : Int;
+        ghost var ghostCurrentAirPressure : Int;
+        ghost var ghostCurrentTemperature : Int;
+        ghost var ghostCurrentWindSpeed : Int;
 
-    function method average(valOne: real, valTwo: real) : real
-    {
-        (valOne + valTwo) / 2.0
-    }
+        // Previous Data Ghosts
+        ghost var ghostPreviousHumidityLevel : Int;
+        ghost var ghostPreviousAirPressure : Int;
 
-    constructor()
-    ensures validSatelliteUplink()
-    {
-        satConn := null;
-        currentData := null;
-        previousData := null;
-        new;
-        satConn := new SatConn();
-        currentData := satConn.retrieveCurrentData();
-        previousData := satConn.retrievePreviousData();
-    }
-
-    // External Dafny Wrappers
-    method getBarometricPressure'(cache: SatelliteDataCache) returns (bp : real)
-    ensures bp > 0.0
-    {
-      bp := cache.getBarometricPressure();
-      expect bp > 0.0;
-    } 
-
-    method getHumidityLevel'(cache: SatelliteDataCache) returns (h : real)
-    ensures h > 0.0
-    {
-      h := cache.getHumidityLevel();
-      expect h > 0.0;
-    }
-
-    method getWindSpeed'(cache: SatelliteDataCache) returns (w : real)
-    ensures w > 0.0
-    {
-      w := cache.getWindSpeed();
-      expect w > 0.0;
-    }
-
-    method getTemperature'(cache: SatelliteDataCache) returns (t : real)
-    ensures t > 0.0
-    {
-      t := cache.getTemperature();
-      expect t > 0.0;
-    }
-
-    method checkNearbyAreaStorms() returns (warningSuggested : bool)
-    requires validSatelliteUplink()
-    {
-        warningSuggested := satConn.otherStationsStormWarning();
-    }
-
-    method checkNearbyAreaTornadoes() returns (warningSuggested : bool)
-    requires validSatelliteUplink()
-    {
-        warningSuggested := satConn.otherStationsTornadoWarning();
-    }
-
-    method runStormCheckForArea'(localHumidity : real, localAirPressure : real, localTemperature : real) returns (warningSuggested : bool)
-    requires validSatelliteUplink()
-    requires localHumidity > 0.0
-    requires localAirPressure > 0.0
-    requires localTemperature > 0.0
-    modifies this`ghostCurrentHumidityLevel
-    modifies this`ghostCurrentAirPressure
-    modifies this`ghostCurrentTemperature
-    ensures average(localHumidity, ghostCurrentHumidityLevel) > 30.0 && average(localTemperature, ghostCurrentTemperature) > 70.0 ==> warningSuggested == true
-    ensures average(localHumidity, ghostCurrentHumidityLevel) > 30.0 && average(localAirPressure, ghostCurrentAirPressure) < 900.0 ==> warningSuggested == true
-    {
-        var currHumidityLevel := getHumidityLevel'(currentData);
-        var currAirPressure := getBarometricPressure'(currentData);
-        var currTemperature := getTemperature'(currentData);
-
-        // Assign Ghost variables for Verification
-        ghostCurrentHumidityLevel := currHumidityLevel;
-        ghostCurrentAirPressure := currAirPressure;
-        ghostCurrentTemperature := currTemperature;
-
-        var avgHumidityLevel := average(localHumidity, currHumidityLevel);
-        var avgAirPressure := average(localAirPressure, currAirPressure);
-        var avgTemperature := average(localTemperature, currTemperature);
-
-        if ((avgHumidityLevel > 30.0 && avgTemperature > 70.0) || (avgHumidityLevel > 30.0 && avgAirPressure < 900.0)) {
-            warningSuggested := true;
-        } else {
-            warningSuggested := checkNearbyAreaStorms();
+        // Validity predicate
+        predicate validSatelliteUplink()
+        reads this`satConn
+        reads this`currentData
+        reads this`previousData
+        {
+            satConn != null
+            && currentData != null
+            && previousData != null
         }
-    }
 
-    method runTornadoCheckForArea'(localHumidity : real, localAirPressure : real, localWindSpeed : real) returns (warningSuggested : bool)
-    requires validSatelliteUplink()
-    requires localHumidity > 0.0
-    requires localAirPressure > 0.0
-    requires localWindSpeed > 0.0
-    modifies this`ghostCurrentHumidityLevel
-    modifies this`ghostCurrentAirPressure
-    modifies this`ghostCurrentWindSpeed
-    modifies this`ghostPreviousHumidityLevel
-    modifies this`ghostPreviousAirPressure
-    ensures abs(average(localAirPressure, ghostCurrentAirPressure) - ghostPreviousAirPressure) > 150.0 ==> warningSuggested == true
-    ensures abs(average(localHumidity, ghostCurrentHumidityLevel) - ghostPreviousHumidityLevel) > 5.0
-                && average(localWindSpeed, ghostCurrentWindSpeed) > 15.0
-                ==> warningSuggested == true
-    {
-        // Air Pressure Calculations
-        var currAirPressure := getBarometricPressure'(currentData);
-        var prevAirPressure := getBarometricPressure'(previousData);
+        function method abs(val : Int) : Int
+        requires -MAX_VALUE <= val < MAX_VALUE
+        {
+            if val < 0 then -val else val
+        }
 
-        ghostCurrentAirPressure := currAirPressure;
-        ghostPreviousAirPressure := prevAirPressure;
+        function method average(valOne: Int, valTwo: Int) : Int
+        requires -MAX_VALUE <= valOne < MAX_VALUE
+        requires -MAX_VALUE <= valTwo < MAX_VALUE
+        {
+            (valOne + valTwo) / 2
+        }
 
-        var airPressureAvg := average(localAirPressure, currAirPressure);
-        var airPressureDiff := abs(airPressureAvg - prevAirPressure);
+        constructor init()
+        ensures validSatelliteUplink()
+        {
+            satConn := null;
+            currentData := null;
+            previousData := null;
+            new;
+            satConn := new SatConn();
+            currentData := satConn.retrieveCurrentData();
+            previousData := satConn.retrievePreviousData();
+        }
 
-        // Humidity Calculations
-        var currHumidityLevel := getHumidityLevel'(currentData);
-        var prevHumidityLevel := getHumidityLevel'(previousData);
+        method setCurrentData(data: SatelliteDataCache)
+        modifies this`currentData
+        ensures this.currentData == data
+        {
+            this.currentData := data;
+        }
 
-        ghostCurrentHumidityLevel := currHumidityLevel;
-        ghostPreviousHumidityLevel := prevHumidityLevel;
+        method setPreviousData(data: SatelliteDataCache)
+        modifies this`previousData
+        ensures this.previousData == data
+        {
+            this.previousData := data;
+        }
 
-        var humidityAvg := average(localHumidity, currHumidityLevel);
-        var humidityDiff := abs(humidityAvg - prevHumidityLevel);
+        // External Dafny Wrappers
+        method getBarometricPressure'(cache: SatelliteDataCache) returns (bp : Int)
+        ensures MIN_AIR_PRESSURE <= bp < MAX_AIR_PRESSURE
+        {
+        bp := cache.getBarometricPressure();
+        expect MIN_AIR_PRESSURE <= bp < MAX_AIR_PRESSURE;
+        } 
 
-        // Wind Speed Calculations
-        var currWindSpeed := getWindSpeed'(currentData);
+        method getHumidityLevel'(cache: SatelliteDataCache) returns (h : Int)
+        ensures MIN_HUMIDITY <= h < MAX_HUMIDITY
+        {
+        h := cache.getHumidityLevel();
+        expect MIN_HUMIDITY <= h < MAX_HUMIDITY;
+        }
 
-        ghostCurrentWindSpeed := currWindSpeed;
+        method getWindSpeed'(cache: SatelliteDataCache) returns (w : Int)
+        ensures MIN_WINDSPEED <= w < MAX_WINDSPEED
+        {
+        w := cache.getWindSpeed();
+        expect MIN_WINDSPEED <= w < MAX_WINDSPEED;
+        }
 
-        var windSpeedAvg := average(localWindSpeed, currWindSpeed);
+        method getTemperature'(cache: SatelliteDataCache) returns (t : Int)
+        ensures MIN_TEMPERATURE <= t < MAX_TEMPERATURE
+        {
+        t := cache.getTemperature();
+        expect MIN_WINDSPEED <= t < MAX_TEMPERATURE;
+        }
 
-        // Suggest Tornado Warning based off of calculations
-        if (airPressureDiff > 150.0 || (humidityDiff > 5.0 && windSpeedAvg > 15.0)) {
-            warningSuggested := true;
-        } else {
-            warningSuggested := checkNearbyAreaTornadoes();
+        method checkNearbyAreaStorms() returns (warningSuggested : bool)
+        requires validSatelliteUplink()
+        {
+            warningSuggested := satConn.otherStationsStormWarning();
+        }
+
+        method checkNearbyAreaTornadoes() returns (warningSuggested : bool)
+        requires validSatelliteUplink()
+        {
+            warningSuggested := satConn.otherStationsTornadoWarning();
+        }
+
+        method runStormCheckForArea(localHumidity : Int, localAirPressure : Int, localTemperature : Int) returns (warningSuggested : bool)
+        requires validSatelliteUplink()
+        requires MIN_HUMIDITY <= localHumidity < MAX_HUMIDITY
+        requires MIN_AIR_PRESSURE <= localAirPressure < MAX_AIR_PRESSURE
+        requires MIN_TEMPERATURE <= localTemperature < MAX_TEMPERATURE
+        modifies this`ghostCurrentHumidityLevel
+        modifies this`ghostCurrentAirPressure
+        modifies this`ghostCurrentTemperature
+        ensures MIN_HUMIDITY <= ghostCurrentHumidityLevel < MAX_HUMIDITY
+        ensures MIN_AIR_PRESSURE <= ghostCurrentAirPressure < MAX_AIR_PRESSURE
+        ensures MIN_TEMPERATURE <= ghostCurrentTemperature < MAX_TEMPERATURE
+        ensures average(localHumidity, ghostCurrentHumidityLevel) > 30 && average(localTemperature, ghostCurrentTemperature) > 70 ==> warningSuggested == true
+        ensures average(localHumidity, ghostCurrentHumidityLevel) > 30 && average(localAirPressure, ghostCurrentAirPressure) < 900 ==> warningSuggested == true
+        {
+            var currHumidityLevel := getHumidityLevel'(currentData);
+            var currAirPressure := getBarometricPressure'(currentData);
+            var currTemperature := getTemperature'(currentData);
+
+            // Assign Ghost variables for Verification
+            ghostCurrentHumidityLevel := currHumidityLevel;
+            ghostCurrentAirPressure := currAirPressure;
+            ghostCurrentTemperature := currTemperature;
+
+            var avgHumidityLevel := average(localHumidity, currHumidityLevel);
+            var avgAirPressure := average(localAirPressure, currAirPressure);
+            var avgTemperature := average(localTemperature, currTemperature);
+
+            if ((avgHumidityLevel > 30 && avgTemperature > 70) || (avgHumidityLevel > 30 && avgAirPressure < 900)) {
+                warningSuggested := true;
+            } else {
+                warningSuggested := checkNearbyAreaStorms();
+            }
+        }
+
+        method runTornadoCheckForArea(localHumidity : Int, localAirPressure : Int, localWindSpeed : Int) returns (warningSuggested : bool)
+        requires validSatelliteUplink()
+        requires MIN_HUMIDITY <= localHumidity < MAX_HUMIDITY
+        requires MIN_AIR_PRESSURE <= localAirPressure < MAX_AIR_PRESSURE
+        requires MIN_WINDSPEED <= localWindSpeed < MAX_WINDSPEED
+        modifies this`ghostCurrentHumidityLevel
+        modifies this`ghostCurrentAirPressure
+        modifies this`ghostCurrentWindSpeed
+        modifies this`ghostPreviousHumidityLevel
+        modifies this`ghostPreviousAirPressure
+        ensures MIN_HUMIDITY <= this.ghostCurrentHumidityLevel < MAX_HUMIDITY
+        ensures MIN_AIR_PRESSURE <= this.ghostCurrentAirPressure < MAX_AIR_PRESSURE
+        ensures MIN_WINDSPEED <= this.ghostCurrentWindSpeed < MAX_WINDSPEED
+        ensures MIN_HUMIDITY <= this.ghostPreviousHumidityLevel < MAX_HUMIDITY
+        ensures MIN_AIR_PRESSURE <= this.ghostPreviousAirPressure < MAX_AIR_PRESSURE
+        ensures abs(average(localAirPressure, ghostCurrentAirPressure) - ghostPreviousAirPressure) > 150 ==> warningSuggested == true
+        ensures abs(average(localHumidity, ghostCurrentHumidityLevel) - ghostPreviousHumidityLevel) > 5
+                    && average(localWindSpeed, ghostCurrentWindSpeed) > 15
+                    ==> warningSuggested == true
+        {
+            // Air Pressure Calculations
+            var currAirPressure := getBarometricPressure'(currentData);
+            var prevAirPressure := getBarometricPressure'(previousData);
+
+            ghostCurrentAirPressure := currAirPressure;
+            ghostPreviousAirPressure := prevAirPressure;
+
+            var airPressureAvg := average(localAirPressure, currAirPressure);
+            var airPressureDiff := abs(airPressureAvg - prevAirPressure);
+
+            // Humidity Calculations
+            var currHumidityLevel := getHumidityLevel'(currentData);
+            var prevHumidityLevel := getHumidityLevel'(previousData);
+
+            ghostCurrentHumidityLevel := currHumidityLevel;
+            ghostPreviousHumidityLevel := prevHumidityLevel;
+
+            var humidityAvg := average(localHumidity, currHumidityLevel);
+            var humidityDiff := abs(humidityAvg - prevHumidityLevel);
+
+            // Wind Speed Calculations
+            var currWindSpeed := getWindSpeed'(currentData);
+
+            ghostCurrentWindSpeed := currWindSpeed;
+
+            var windSpeedAvg := average(localWindSpeed, currWindSpeed);
+
+            // Suggest Tornado Warning based off of calculations
+            if (airPressureDiff > 150 || (humidityDiff > 5 && windSpeedAvg > 15)) {
+                warningSuggested := true;
+            } else {
+                warningSuggested := checkNearbyAreaTornadoes();
+            }
         }
     }
 }

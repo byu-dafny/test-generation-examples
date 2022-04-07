@@ -12,9 +12,9 @@ public class WeatherStation {
     private SatelliteUplink satelliteUplink;
 
     public boolean runStormWarningCheck() {
-        double humidity = hygrometer.getCurrentHumidity();
-        double airPressure = barometer.getAtmosphericPressure();
-        double temperature = thermometer.getCurrentTemperature();
+        int humidity = hygrometer.getCurrentHumidity();
+        int airPressure = barometer.getAtmosphericPressure();
+        int temperature = thermometer.getCurrentTemperature();
         boolean stormWarning = false;
 
         System.out.println("Humidity: " + humidity + " AirPressure: " + airPressure + " Temp: " + temperature);
@@ -27,9 +27,9 @@ public class WeatherStation {
     }
 
     public boolean runTornadoWarningCheck() {
-        double humidity = hygrometer.getCurrentHumidity();
-        double windSpeed = anemometer.getWindSpeed();
-        double airPressure = barometer.getAtmosphericPressure();
+        int humidity = hygrometer.getCurrentHumidity();
+        int windSpeed = anemometer.getWindSpeed();
+        int airPressure = barometer.getAtmosphericPressure();
         boolean tornadoWarning = false;
 
 
@@ -42,13 +42,13 @@ public class WeatherStation {
 
     public boolean anemometerCalibrationCheck() {
         boolean isAnemometerWorking = true;
-        double windSpeedAlpha = anemometer.getWindSpeed();
-        double windSpeedBeta = anemometer.getWindSpeed();
-        double windDirAlpha = anemometer.getWindDirInDegrees();
-        double windDirBeta = anemometer.getWindDirInDegrees();
+        int windSpeedAlpha = anemometer.getWindSpeed();
+        int windSpeedBeta = anemometer.getWindSpeed();
+        int windDirAlpha = anemometer.getWindDirInDegrees();
+        int windDirBeta = anemometer.getWindDirInDegrees();
 
-        double windSpeedDiff = Math.abs(windSpeedAlpha - windSpeedBeta);
-        double windDirDiff = Math.abs(windDirAlpha - windDirBeta);
+        int windSpeedDiff = Math.abs(windSpeedAlpha - windSpeedBeta);
+        int windDirDiff = Math.abs(windDirAlpha - windDirBeta);
 
         if (windSpeedDiff > 1 || windDirDiff > 20) {
             isAnemometerWorking = false;
@@ -59,9 +59,9 @@ public class WeatherStation {
 
     public boolean temperatureCalibrationTest() {
         boolean isWorking = true;
-        double thermAlpha = thermometer.getCurrentTemperature();
-        double thermBeta = thermometer.getCurrentTemperature();
-        double thermDiff = Math.abs(thermAlpha - thermBeta);
+        int thermAlpha = thermometer.getCurrentTemperature();
+        int thermBeta = thermometer.getCurrentTemperature();
+        int thermDiff = Math.abs(thermAlpha - thermBeta);
 
         System.out.println("Alpha: " + thermAlpha + " Beta: " + thermBeta + " Diff: " + thermDiff);
 

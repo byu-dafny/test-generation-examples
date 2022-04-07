@@ -11,7 +11,7 @@ public class SatelliteUplinkOld {
    * {@link SatConnDummy} which returns dummy data.
    */
   public SatelliteUplinkOld() {
-    satConn = new SatConnDummy();
+    satConn = new SatConn();
     previousData = satConn.retrievePreviousData();
     currentData = satConn.retrieveCurrentData();
   }
@@ -44,11 +44,11 @@ public class SatelliteUplinkOld {
    * @param localTemperature The temperature reading
    * @return True if a storm warning is suggested. False otherwise.
    */
-  public boolean runStormCheckForArea(double localHumidity, double localAirPressure, double localTemperature) {
+  public boolean runStormCheckForArea(int localHumidity, int localAirPressure, int localTemperature) {
     boolean stormWarningSuggested;
-    double currHumidityAvg = (currentData.getHumidityLevel() + localHumidity) / 2;
-    double currAirPressureAvg = (currentData.getBarometricPressure() + localAirPressure) / 2;
-    double currTempAvg = (currentData.getTemperature() + localTemperature) / 2;
+    int currHumidityAvg = (currentData.getHumidityLevel() + localHumidity) / 2;
+    int currAirPressureAvg = (currentData.getBarometricPressure() + localAirPressure) / 2;
+    int currTempAvg = (currentData.getTemperature() + localTemperature) / 2;
 
     if ((currHumidityAvg > 30 && currTempAvg > 70) || (currHumidityAvg > 30 && currAirPressureAvg < 900)) {
       stormWarningSuggested = true;
@@ -99,13 +99,13 @@ public class SatelliteUplinkOld {
    * @param localWindSpeed   The wind speed reading
    * @return True if a tornado warning is suggested. False otherwise.
    */
-  public boolean runTornadoCheckForArea(double localHumidity, double localAirPressure, double localWindSpeed) {
+  public boolean runTornadoCheckForArea(int localHumidity, int localAirPressure, int localWindSpeed) {
     boolean tornadoWarningSuggested;
-    double currHumidityAvg = (currentData.getHumidityLevel() + localHumidity) / 2;
-    double currAirPressureAvg = (currentData.getBarometricPressure() + localAirPressure) / 2;
-    double currWindSpeedAvg = (currentData.getWindSpeed() + localWindSpeed) / 2;
-    double airPressureDiff = Math.abs(currAirPressureAvg - previousData.getBarometricPressure());
-    double humidityDiff = Math.abs(currHumidityAvg - previousData.getHumidityLevel());
+    int currHumidityAvg = (currentData.getHumidityLevel() + localHumidity) / 2;
+    int currAirPressureAvg = (currentData.getBarometricPressure() + localAirPressure) / 2;
+    int currWindSpeedAvg = (currentData.getWindSpeed() + localWindSpeed) / 2;
+    int airPressureDiff = Math.abs(currAirPressureAvg - previousData.getBarometricPressure());
+    int humidityDiff = Math.abs(currHumidityAvg - previousData.getHumidityLevel());
 
     if (airPressureDiff > 150 || (humidityDiff > 5 && currWindSpeedAvg > 15)) {
       tornadoWarningSuggested = true;

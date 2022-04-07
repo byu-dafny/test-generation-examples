@@ -19,7 +19,7 @@ public class WeatherStationTests {
     Barometer barometer;
     Hygrometer hygrometer;
     Thermometer thermometer;
-    SatelliteUplink uplinkSpy;
+    SatelliteUplink uplink;
 
     @BeforeEach
     public void setup() {
@@ -30,7 +30,8 @@ public class WeatherStationTests {
         thermometer = Mockito.mock(Thermometer.class);
 
         // Create an instance of uplink and spy on it
-        uplinkSpy = Mockito.spy(new SatelliteUplink());
+        uplink = new SatelliteUplink();
+        uplink.init();
 
         // Initialize testSubject and give it everything
         testSubject = new WeatherStation();
@@ -39,7 +40,7 @@ public class WeatherStationTests {
         testSubject.setBarometer(barometer);
         testSubject.setHygrometer(hygrometer);
         testSubject.setThermometer(thermometer);
-        testSubject.setSatelliteUplink(uplinkSpy);
+        testSubject.setSatelliteUplink(uplink);
     }
 
     // This test does not involve the satellite uplink made by dafny
@@ -47,8 +48,8 @@ public class WeatherStationTests {
     @DisplayName("Test for anemometer calibration check")
     public void testForAnemometerCalibrationCheck() {
         // Mockito when statements
-        Mockito.when(anemometer.getWindSpeed()).thenReturn(10.2, 12.0);
-        Mockito.when(anemometer.getWindDirInDegrees()).thenReturn(30.4, 40.68);
+        Mockito.when(anemometer.getWindSpeed()).thenReturn(10, 12);
+        Mockito.when(anemometer.getWindDirInDegrees()).thenReturn(30, 40);
 
         Assertions.assertFalse(testSubject.anemometerCalibrationCheck());
     }
@@ -58,33 +59,27 @@ public class WeatherStationTests {
     @DisplayName("Test for running storm warning check")
     public void testForRunningStormWarningCheck() {
         // Mockito when statements
-        Mockito.when(hygrometer.getCurrentHumidity()).thenReturn(40.43, 30.6);
-        Mockito.when(barometer.getAtmosphericPressure()).thenReturn(800.45, 900.68, 1200.9);
-        Mockito.when(thermometer.getCurrentTemperature()).thenReturn(75.80, 60.67);
-        Mockito.when(uplinkSpy.checkNearbyAreaStorms()).thenReturn(false);
+        Mockito.when(hygrometer.getCurrentHumidity()).thenReturn(40, 35, 35, 38);
+        Mockito.when(barometer.getAtmosphericPressure()).thenReturn(800, 900, 1090, 1050);
+        Mockito.when(thermometer.getCurrentTemperature()).thenReturn(75, 60, 60, 30);
 
         Assertions.assertTrue(testSubject.runStormWarningCheck());
         Assertions.assertTrue(testSubject.runStormWarningCheck());
         Assertions.assertFalse(testSubject.runStormWarningCheck());
-
-        // Check that checkNearbyAreaStorms was called ONCE during this test
-        Mockito.verify(uplinkSpy, Mockito.times(1)).checkNearbyAreaStorms();
+        Assertions.assertFalse(testSubject.runStormWarningCheck());
     }
 
     @Test
     @DisplayName("Test tornado warning is suggested")
     public void testTornadoWarningIsSuggested() {
         // Mockito setup
-        Mockito.when(hygrometer.getCurrentHumidity()).thenReturn(29.45);
-        Mockito.when(barometer.getAtmosphericPressure()).thenReturn(640.58, 967.3);
-        Mockito.when(anemometer.getWindSpeed()).thenReturn(14.58, 15.65);
-        Mockito.when(uplinkSpy.checkNearbyAreaTornadoes()).thenReturn(false);
+        Mockito.when(hygrometer.getCurrentHumidity()).thenReturn(29, 45, 31);
+        Mockito.when(barometer.getAtmosphericPressure()).thenReturn(800, 967, 900);
+        Mockito.when(anemometer.getWindSpeed()).thenReturn(14, 17, 14);
 
+        Assertions.assertFalse(testSubject.runTornadoWarningCheck());
         Assertions.assertTrue(testSubject.runTornadoWarningCheck());
         Assertions.assertFalse(testSubject.runTornadoWarningCheck());
-
-        // Check that checkNearbyAreaTornadoes was called ONCE during this test
-        Mockito.verify(uplinkSpy, Mockito.times(1)).checkNearbyAreaTornadoes();
     }
 
 }

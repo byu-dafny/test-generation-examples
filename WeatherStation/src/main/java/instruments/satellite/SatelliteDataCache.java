@@ -7,47 +7,47 @@ package instruments.satellite;
 public class SatelliteDataCache {
 
   // Composite data from other stations and satellite readings
-  private double barometricPressure;
-  private double humidityLevel;
-  private double windSpeed;
-  private double temperature;
+  private int barometricPressure;
+  private int humidityLevel;
+  private int windSpeed;
+  private int temperature;
 
-  public SatelliteDataCache(double barometricPressure, double humidityLevel, double windSpeed, double temperature) {
+  public SatelliteDataCache(int barometricPressure, int humidityLevel, int windSpeed, int temperature) {
     this.barometricPressure = barometricPressure;
     this.humidityLevel = humidityLevel;
     this.windSpeed = windSpeed;
     this.temperature = temperature;
   }
 
-  public double getBarometricPressure() {
+  public int getBarometricPressure() {
     return barometricPressure;
   }
 
-  public void setBarometricPressure(double barometricPressure) {
+  public void setBarometricPressure(int barometricPressure) {
     this.barometricPressure = barometricPressure;
   }
 
-  public double getHumidityLevel() {
+  public int getHumidityLevel() {
     return humidityLevel;
   }
 
-  public void setHumidityLevel(double humidityLevel) {
+  public void setHumidityLevel(int humidityLevel) {
     this.humidityLevel = humidityLevel;
   }
 
-  public double getWindSpeed() {
+  public int getWindSpeed() {
     return windSpeed;
   }
 
-  public void setWindSpeed(double windSpeed) {
+  public void setWindSpeed(int windSpeed) {
     this.windSpeed = windSpeed;
   }
 
-  public double getTemperature() {
+  public int getTemperature() {
     return temperature;
   }
 
-  public void setTemperature(double temperature) {
+  public void setTemperature(int temperature) {
     this.temperature = temperature;
   }
 }

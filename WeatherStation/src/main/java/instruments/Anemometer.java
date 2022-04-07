@@ -2,13 +2,13 @@ package instruments;
 
 public class Anemometer {
 
-    public double getWindSpeed() {
+    public int getWindSpeed() {
         //TODO Implement
-        return 0.0;
+        return 0;
     }
 
-    public double getWindDirInDegrees() {
+    public int getWindDirInDegrees() {
         //TODO Implement
-        return 0.0;
+        return 0;
     }
 }

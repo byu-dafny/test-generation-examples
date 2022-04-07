@@ -1,12 +1,28 @@
 package instruments.satellite;
 
-public interface SatConn {
+public class SatConn {
 
-  SatelliteDataCache retrieveCurrentData();
+  private final SatelliteDataCache dummyDataMorning;
+  private final SatelliteDataCache dummyDataEvening;
 
-  SatelliteDataCache retrievePreviousData();
+  public SatConn() {
+    dummyDataMorning = new SatelliteDataCache(1000, 30, 15, 75);
+    dummyDataEvening = new SatelliteDataCache(800, 30, 15, 75);
+  }
 
-  boolean otherStationsStormWarning();
+  public SatelliteDataCache retrieveCurrentData() {
+    return dummyDataEvening;
+  }
 
-  boolean otherStationsTornadoWarning();
+  public SatelliteDataCache retrievePreviousData() {
+    return dummyDataMorning;
+  }
+
+  public boolean otherStationsStormWarning() {
+    return false;
+  }
+
+  public boolean otherStationsTornadoWarning() {
+    return false;
+  }
 }
