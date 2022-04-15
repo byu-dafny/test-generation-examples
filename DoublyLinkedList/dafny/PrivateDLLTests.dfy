@@ -11,15 +11,15 @@ module PrivateDLLTests {
 
         // The three methods below have to be implemented in the target language -- edit: not anymore!
 
-        method {:extern} {:fresh} GetFreshPrivateDoublyLinkedList<T>() 
+        static method {:synthesize} GetFreshPrivateDoublyLinkedList<T>() 
             returns (list:PrivateDoublyLinkedList<T>) 
             ensures fresh(list)
 
-        method {:extern} {:fresh} GetFreshPrivateNode<T>() 
+        static method {:synthesize} GetFreshPrivateNode<T>() 
             returns (node:PrivateNode<T>) 
             ensures fresh(node)
 
-        method {:extern} {:fresh} GetFreshDllIterator<T>() 
+        static method {:synthesize} GetFreshDllIterator<T>() 
             returns (iter:DllIterator<T>) 
             ensures fresh(iter)
 
@@ -253,15 +253,15 @@ module PrivateDLLTests {
 
         // The three methods below have to be implemented in the target language -- edit: not anymore!
 
-        method {:extern} {:fresh} GetFreshPrivateDoublyLinkedList<T>() 
+        static method {:synthesize} GetFreshPrivateDoublyLinkedList<T>() 
             returns (list:PrivateDoublyLinkedList<T>) 
             ensures fresh(list)
 
-        method {:extern} {:fresh} GetFreshPrivateNode<T>() 
+        static method {:synthesize} GetFreshPrivateNode<T>() 
             returns (node:PrivateNode<T>) 
             ensures fresh(node)
 
-        method {:extern} {:fresh} GetFreshDllIterator<T>() 
+        static method {:synthesize} GetFreshDllIterator<T>() 
             returns (iter:DllIterator<T>) 
             ensures fresh(iter)
 

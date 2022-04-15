@@ -1,0 +1,36 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
+    - name: Set up .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Set up Dafny
+      run: | 
+        git clone https://github.com/dafny-lang/dafny.git
+        dotnet build dafny/Source/Dafny.sln
+    - name: Get Z3
+      run: |
+        wget https://github.com/Z3Prover/z3/releases/download/Z3-4.8.5/z3-4.8.5-x64-ubuntu-16.04.zip
+        unzip z3-4.8.5-x64-ubuntu-16.04.zip
+        mv z3-4.8.5-x64-ubuntu-16.04 dafny/Binaries/z3
+    - name: Run C# Tests
+      run: |
+        (dotnet dafny/Binaries/Dafny.dll /compileVerbose:1 /compile:2 /spillTargetCode:3 /noVerify /out:DoublyLinkedList/PrivateDLLTests.cs DoublyLinkedList/dafny/PrivateDLLTests.dfy) || true
+        dotnet test DoublyLinkedList/DoublyLinkedList.csproj
