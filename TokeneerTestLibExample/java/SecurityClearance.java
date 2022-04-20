@@ -7,6 +7,6 @@ public class SecurityClearance {
 
   private static final dafny.TypeDescriptor<SecurityClearance> _TYPE = dafny.TypeDescriptor.referenceWithInitializer(SecurityClearance.class, () -> (SecurityClearance) null);
   public static dafny.TypeDescriptor<SecurityClearance> _typeDescriptor() {
-  return (dafny.TypeDescriptor<SecurityClearance>) (dafny.TypeDescriptor<?>) _TYPE;
-}
+    return (dafny.TypeDescriptor<SecurityClearance>) (dafny.TypeDescriptor<?>) _TYPE;
+  }
 }

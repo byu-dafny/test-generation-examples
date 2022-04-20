@@ -46,29 +46,6 @@ ln -s ../../../../java/SecurityClearance.java src/main/java/ExternSecurityCleara
 mkdir src/main/java/ExternToken_Compile
 ln -s ../../../../java/Token.java src/main/java/ExternToken_Compile/
 
-# Add the Imports
-# sed -i ''                                                                     \
-#     -E                                                                        \
-#     -e '/^package*/a import ExternFingerprint_Compile.*;'                   \
-#     -e '/^package*/a import ExternSecurityClearance_Compile.*;'        \
-#     -e '/^package*/a import ExternToken_Compile.*;'                    \
-#     src/main/java/${MODULENAME}_Compile/IdStation.java
-
-# sed -i ''                                                                     \
-#     -E                                                                        \
-#     -e '/^package*/a\'$'\n''import ExternFingerprint_Compile.*;'              \
-#     -e '/^package*/a\'$'\n''import ExternSecurityClearance_Compile.*;'        \
-#     -e '/^package*/a\'$'\n''import ExternToken_Compile.*;'                    \
-#     src/test/java/${MODULENAME}Tests_Compile/InputPartitioningTests.java
-
-# sed -i ''                                                                     \
-#     -E                                                                        \
-#     -e '/^package*/a\'$'\n''import ExternFingerprint_Compile.*;'              \
-#     -e '/^package*/a\'$'\n''import ExternSecurityClearance_Compile.*;'        \
-#     -e '/^package*/a\'$'\n''import ExternToken_Compile.*;'                    \
-#     src/test/java/${MODULENAME}Tests_Compile/McDcTests.java
-
-
 # Add the external Assertions library to the test directory
 mkdir src/test/java/Utils_Compile
 ln -s ../../../../../test-library-common/Assertions.java src/test/java/Utils_Compile/
