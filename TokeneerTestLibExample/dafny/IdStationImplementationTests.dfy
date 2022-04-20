@@ -93,7 +93,7 @@ module IdStationImplementationTests {
     }
   }
 
-  class McDcCoverage {
+  class McDcCoverageTests {
     static method {:synthesize "mock"}
     securityClearanceIsNotCleared() returns (securityClearance : SecurityClearance)
       ensures fresh(securityClearance)
