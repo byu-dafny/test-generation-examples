@@ -28,7 +28,7 @@ module IdStationImplementation {
     {
       expect !this.alarm;
 
-      var doesCertify : bool := t.certify(fingerprint);
+      var doesCertify : bool := t.doesCertify(fingerprint);
       if (doesCertify) {
         var tokenLevel : SecurityClearance := t.getLevel();
         hasAccess := level.isCleared(tokenLevel);

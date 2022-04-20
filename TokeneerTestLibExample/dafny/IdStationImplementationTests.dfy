@@ -25,11 +25,11 @@ module IdStationImplementationTests {
       freshIdStation() returns (idStation : IdStation)
       ensures fresh(idStation)
 
-    static method {:synthesize "fresh"}
+    static method {:synthesize "mock"}
     freshToken() returns (token : Token)
       ensures fresh(token)
 
-    static method {:synthesize "fresh"}
+    static method {:synthesize "mock"}
     freshFingerprint() returns (fingerprint : Fingerprint)
       ensures fresh(fingerprint)
 
@@ -67,10 +67,11 @@ module IdStationImplementationTests {
     }
 
     static method {:synthesize "mock"}
-    tokenDoesCertify() returns (token : Token)
+    tokenDoesCertify(level : SecurityClearance) returns (token : Token)
       ensures fresh(token)
       ensures forall fingerprint : Fingerprint :: 
         token.doesCertify(fingerprint) == true
+      ensures token.getLevel() == level
 
     static method {:synthesize "mock"}
     securityClearanceIsCleared() returns (securityClearance : SecurityClearance)
@@ -81,9 +82,9 @@ module IdStationImplementationTests {
     method {:test}
     should_notAlarmAndGrantAccess_when_tokenDoesCertifyFingerprintAndIsCleared()
     {
-      var token : Token := tokenDoesCertify();
       var fingerprint : Fingerprint := freshFingerprint();
       var securityClearance : SecurityClearance := securityClearanceIsCleared();
+      var token : Token := tokenDoesCertify(securityClearance);
       var idStation : IdStation := new IdStation.IdStation(securityClearance);
 
       var hasAccess : bool := idStation.hasAccess(token, fingerprint);
@@ -116,7 +117,7 @@ module IdStationImplementationTests {
       // If-statement, doesCertify true, isCleared false
       var securityClearance1 : SecurityClearance := 
         securityClearanceIsNotCleared();
-      var token1 : Token := InputPartitioningTests.tokenDoesCertify();
+      var token1 : Token := InputPartitioningTests.tokenDoesCertify(securityClearance1);
       var fingerprint1 : Fingerprint := 
         InputPartitioningTests.freshFingerprint();
       var hasAccess1 : bool := false;
@@ -125,7 +126,7 @@ module IdStationImplementationTests {
       // If-statement, doesCertify true, isCleared true
       var securityClearance2 : SecurityClearance := 
         InputPartitioningTests.securityClearanceIsCleared();
-      var token2 : Token := InputPartitioningTests.tokenDoesCertify();
+      var token2 : Token := InputPartitioningTests.tokenDoesCertify(securityClearance2);
       var fingerprint2 : Fingerprint := 
         InputPartitioningTests.freshFingerprint();
       var hasAccess2 : bool := true;

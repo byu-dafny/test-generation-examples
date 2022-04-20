@@ -5,8 +5,12 @@ public class Token {
     return null;
   }
 
-  public boolean certify(ExternFingerprint_Compile.Fingerprint f) {
+  public boolean doesCertify(ExternFingerprint_Compile.Fingerprint f) {
     return false;
+  }
+
+  public boolean certify(ExternFingerprint_Compile.Fingerprint f) {
+    return doesCertify(f);
   } 
 
   private static final dafny.TypeDescriptor<Token> _TYPE = dafny.TypeDescriptor.referenceWithInitializer(Token.class, () -> (Token) null);
