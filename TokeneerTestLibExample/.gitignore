@@ -1,0 +1,13 @@
+target
+.classpath
+.devcontainer
+.project
+.settings
+.vscode
+.factorypath
+.DS_Store
+*.bpl
+*.dll
+src
+dafny/Utils.dfy
+lib

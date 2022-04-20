@@ -8,7 +8,7 @@
 #################################################################################################################
 
 MODULENAME=IdStationImplementation
-DAFNY="/Users/cassidywaldrip/Documents/vvlab/BASE-DIRECTORY/dafny"
+DAFNY="/workspaces/dafny"
 MODEL="./dafny/${MODULENAME}Tests.dfy"
 ARGS="/compileVerbose:1 /compile:2 /spillTargetCode:3 /compileTarget:java /noVerify /out:${MODULENAME}"
 
