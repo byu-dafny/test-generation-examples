@@ -5,7 +5,7 @@ include "ExternToken.dfy"
 include "IdStationImplementation.dfy"
 include "Utils.dfy"
 
-module IdStationTests {
+module IdStationImplementationTests {
   import opened ExternSecurityClearance
   import opened ExternFingerprint
   import opened ExternToken
@@ -25,29 +25,29 @@ module IdStationTests {
       freshIdStation() returns (idStation : IdStation)
       ensures fresh(idStation)
 
-    static method {:synthesize "mock"}
+    static method {:synthesize "fresh"}
     freshToken() returns (token : Token)
       ensures fresh(token)
 
-    static method {:synthesize "mock"}
+    static method {:synthesize "fresh"}
     freshFingerprint() returns (fingerprint : Fingerprint)
       ensures fresh(fingerprint)
 
-    method {:test "throws"} 
-    should_throwException_when_alarmIsAlreadySet()
-    {
-      var idStation : IdStation := freshIdStation();
-      idStation.alarm := true;
-      var token : Token := freshToken();
-      var fingerprint := freshFingerprint();
-      assume false;
-      var hasAccess : bool := idStation.hasAccess(token, fingerprint);
-    }
+    // method {:test "throws"} 
+    // should_throwException_when_alarmIsAlreadySet()
+    // {
+    //   var idStation : IdStation := freshIdStation();
+    //   idStation.alarm := true;
+    //   var token : Token := freshToken();
+    //   var fingerprint := freshFingerprint();
+    //   assume false;
+    //   var hasAccess : bool := idStation.hasAccess(token, fingerprint);
+    // }
 
     static method {:synthesize "mock"}
     tokenDoesNotCertify() returns (token : Token)
       ensures fresh(token)
-      ensures forall fingerprint : Fingerprint :: !token.doesCertify(fingerprint)
+      ensures forall fingerprint : Fingerprint :: token.doesCertify(fingerprint) == false
 
     static method {:synthesize "mock"}
     freshSecurityClearance() returns (securityClearance : SecurityClearance)
@@ -69,12 +69,12 @@ module IdStationTests {
     static method {:synthesize "mock"}
     tokenDoesCertify() returns (token : Token)
       ensures fresh(token)
-      ensures forall fingerprint : Fingerprint :: token.doesCertify(fingerprint)
+      ensures forall fingerprint : Fingerprint :: token.doesCertify(fingerprint) == true
 
     static method {:synthesize "mock"}
     securityClearanceIsCleared() returns (securityClearance : SecurityClearance)
       ensures fresh(securityClearance)
-      ensures forall level : SecurityClearance :: securityClearance.isCleared(level)
+      ensures forall level : SecurityClearance :: securityClearance.isCleared(level) == true
 
     method {:test}
     should_notAlarmAndGrantAccess_when_tokenDoesCertifyFingerprintAndIsCleared()
@@ -94,7 +94,7 @@ module IdStationTests {
     static method {:synthesize "mock"}
     securityClearanceIsNotCleared() returns (securityClearance : SecurityClearance)
       ensures fresh(securityClearance)
-      ensures forall level : SecurityClearance :: !securityClearance.isCleared(level)
+      ensures forall level : SecurityClearance :: securityClearance.isCleared(level) == false
 
     // Input: IdStation.level (SecurityClearance), token (Token), fingerprint (Fingerprint)
     // Output: hasAccess (bool), IdStation.alarm (bool) 
