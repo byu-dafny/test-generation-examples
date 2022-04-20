@@ -6,7 +6,7 @@
   <version>1.0.0</version>
 
   <name>byu-dafny-tokeneer</name>
-  <description>Tokeneer system build and tested from Dafny model.</description>
+  <description>Tokeneer system build and tested from IdStation Dafny model.</description>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
