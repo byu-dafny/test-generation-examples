@@ -218,6 +218,8 @@ Synthesize oracles from ensures-statements on contracts.
 
 ## How to use our tool
 
+[Click here](https://github.com/byu-dafny/simple-example) for a simple example of what your repo might look like.
+
 In the root directory of this repository, you will find 2 template bash scripts: one for compiling Dafny to Java and the other for compiling Dafny to C#.
 
 In order to use these scripts, copy the desired script to the directory of the example you wish to compile. Open the script, and look for "TODO" comments.
