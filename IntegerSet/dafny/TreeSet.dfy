@@ -22,12 +22,42 @@ module TreeSet {
     function addElement(t : Tree, i : int) : Tree {
         if(t.Node?)
         then (
-            if(i < t.value)
-            then Node(addElement(t.left, i), t.value, copy(t.right))
+            if(i == t.value)
+            then copy(t)
             else (
-                if(i > t.value)
-                then Node(copy(t.left), t.value, addElement(t.right, i))
-                else copy(t)
+                if(i < t.value)
+                then Node(addElement(t.left, i), t.value, copy(t.right))
+                else Node(copy(t.left), t.value, addElement(t.right, i))
+            )
+        )
+        else Node(Leaf, i, Leaf)
+    }
+
+    function intersect(l : Tree, r : Tree) : Tree {
+        if(l.Node?)
+        then (
+            if(containsElement(r, l.value))
+            then addElement(union(intersect(l.left, r), intersect(l.right, r)), l.value)
+            else union(intersect(l.left, r), intersect(l.right, r))
+        ) 
+        else Leaf
+    }
+
+    function union(l : Tree, r : Tree) : Tree {
+        if(l.Node?) 
+        then addElement(union(l.left, union(l.right, r)), l.value)
+        else r
+    }
+
+    function removeElement(t : Tree, i : int) : Tree {
+        if(t.Node?)
+        then (
+            if(i == t.value)
+            then union(t.left, t.right)
+            else (
+                if(i < t.value)
+                then Node(removeElement(t.left, i), t.value, copy(t.right))
+                else Node(copy(t.left), t.value, removeElement(t.right, i))
             )
         )
         else Node(Leaf, i, Leaf)
@@ -45,5 +75,12 @@ module TreeSet {
             )
         )
         else false
+    }
+
+    function size(t : Tree) : (s : int)
+    ensures s >= 0 {
+        if(t.Node?)
+        then size(t.left) + size(t.right) + 1
+        else 0
     }
 }
