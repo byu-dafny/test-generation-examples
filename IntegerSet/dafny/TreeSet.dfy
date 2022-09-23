@@ -113,29 +113,28 @@ module TreeSet {
             else containsElement(t.right, i)
         ))
     }
-
+    
+    function lesser(t : Tree, i : int) : bool {
+        t.Leaf? || (i < t.value && lesser(t.left, i) && lesser(t.right, i))
+    }
+    function greater(t : Tree, i : int) : bool {
+        t.Leaf? || (i > t.value && greater(t.left, i) && greater(t.right, i))
+    }
     function ordered(t : Tree) : bool {
-        function lesser(t : Tree, i : int) : bool {
-            t.Leaf? || (i < t.value && lesser(t.left, i) && lesser(t.right, i))
-        }
-        function greater(t : Tree, i : int) : bool {
-            t.Leaf? || (i > t.value && greater(t.left, i) && greater(t.right, i))
-        }
-
         if(t.Node?)
         then greater(t.left, t.value) && lesser(t.right, t.value)
         else true
     }
 
-    function unique(t : Tree) : bool {
-        function count(t : Tree, i : int) : int 
-        ensures count >= 0
-        {
-            if(t.Node?)
-            then (if(t.value == i) then 1 else 0) + count(t.left, i) + count(t.right, i)
-            else 0
-        }
+    function count(t : Tree, i : int) : (count : int) 
+    ensures count >= 0
+    {
+        if(t.Node?)
+        then (if(t.value == i) then 1 else 0) + count(t.left, i) + count(t.right, i)
+        else 0
+    }
 
+    function unique(t : Tree) : bool {
         if(t.Node?)
         then count(t, t.value) == 1 && unique(t.left) && unique(t.right)
         else true
